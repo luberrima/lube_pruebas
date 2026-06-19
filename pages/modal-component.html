@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+
+/* ─────────────────────────────────────────
+   modal.css
+   Uso: <link rel="stylesheet" href="components/modal.css">
+   ───────────────────────────────────────── */
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 0 8px 40px rgba(0,0,0,0.18);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0c4a8 0%, #ddeef5 100%);
+  font-family: var(--font-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+/* ══════════════════════════════
+   OVERLAY
+   Estado cerrado: sin clase
+   Estado abierto: añadir .open
+══════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 38, 52, 0.50);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  /* Estado cerrado */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ══════════════════════════════
+   MODAL
+══════════════════════════════ */
+.modal {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 2.5rem 2rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  position: relative;
+  transform: scale(0.95);
+  transition: transform 0.2s ease;
+}
+.modal-overlay.open .modal {
+  transform: scale(1);
+}
+
+/* ── Botón cerrar (opcional) ── */
+.modal-close {
+  position: absolute;
+  top: 14px; right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-main-dark);
+  opacity: 0.4;
+  font-family: var(--font-titles);
+  font-size: 1rem;
+  line-height: 1;
+  transition: opacity 0.15s;
+  padding: 4px;
+}
+.modal-close:hover { opacity: 1; }
+
+/* ── Contenido ── */
+.modal-title {
+  font-family: var(--font-h1);
+  font-size: 1.4rem;
+  color: var(--color-main-dark);
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+.modal-body {
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  color: var(--color-black);
+  opacity: 0.65;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+
+/* ── Acciones ── */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+/* Botón principal (naranja por defecto en contexto test) */
+.modal-btn-primary {
+  background: var(--color-secondary);
+  color: var(--color-white);
+  font-family: var(--font-titles);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 13px 32px;
+  border-radius: var(--br-small);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  width: 100%;
+}
+.modal-btn-primary:hover { background: var(--color-secondary-dark); }
+.modal-btn-primary:active { transform: scale(0.98); }
+
+/* Variante teal */
+.modal-btn-primary.teal {
+  background: var(--color-main-dark);
+}
+.modal-btn-primary.teal:hover { background: var(--color-main); }
+
+/* Botón secundario ghost */
+.modal-btn-ghost {
+  background: transparent;
+  color: var(--color-main-dark);
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  padding: 11px 32px;
+  border-radius: var(--br-small);
+  border: 1px solid var(--color-main-dark);
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+.modal-btn-ghost:hover { background: #e8f4f5; }
+
+/* Variante link (para "Volver") */
+.modal-btn-link {
+  background: none;
+  border: none;
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  color: var(--color-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px;
+  transition: opacity 0.15s;
+}
+.modal-btn-link:hover { opacity: 0.7; }
+
+/* ══════════════════════════════
+   VARIANTE: sin overlay (modal inline)
+   Para cuando el modal es fijo en
+   pantalla sin fondo (ej. pausa)
+══════════════════════════════ */
+.modal-overlay.no-close-outside {
+  /* No se cierra al hacer click fuera —
+     gestionarlo en JS omitiendo el listener */
+}
+
+/* ══════════════════════════════
+   MÓVIL (< 768px)
+   El modal sube desde abajo
+══════════════════════════════ */
+@media (max-width: 767px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal {
+    border-radius: 20px 0 0 0;
+    max-width: 100%;
+    padding: 2rem 1.25rem 2.5rem;
+    transform: translateY(40px);
+  }
+  .modal-overlay.open .modal {
+    transform: translateY(0);
+  }
+}
+
+/* ── Demo helpers ── */
+.demo-label {
+  font-family: var(--font-titles);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-main);
+  opacity: 0.7;
+}
+.demo-trigger {
+  background: var(--color-main-dark);
+  color: white;
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 10px 0 10px 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.demo-trigger:hover { background: var(--color-main); }
+</style>
+</head>
+<body>
+
+<p class="demo-label">Variante: terminar test</p>
+<button class="demo-trigger" onclick="abrirModal('modal-terminar')">Abrir modal → Terminar test</button>
+
+<p class="demo-label">Variante: salir sin guardar</p>
+<button class="demo-trigger" onclick="abrirModal('modal-salir')">Abrir modal → Salir</button>
+
+<p class="demo-label">Variante: pausa (no cierra al hacer click fuera)</p>
+<button class="demo-trigger" onclick="abrirModal('modal-pausa')">Abrir modal → Pausa</button>
+
+<p class="demo-label">Variante: confirmación genérica (teal)</p>
+<button class="demo-trigger" onclick="abrirModal('modal-generico')">Abrir modal → Genérico</button>
+
+
+<!--
+  ════════════════════════════════════════
+  SNIPPETS HTML — copiar en cada pantalla
+  ════════════════════════════════════════
+
+  JS mínimo necesario (incluir en cada página):
+  function abrirModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+  // Cerrar al click fuera (excepto modal-pausa):
+  document.querySelectorAll('.modal-overlay:not(.no-close-outside)').forEach(o => {
+    o.addEventListener('click', e => {
+      if (e.target === o) cerrarModal(o.id);
+    });
+  });
+-->
+
+<!-- MODAL: Terminar test -->
+<div class="modal-overlay" id="modal-terminar">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-terminar')">✕</button>
+    <h2 class="modal-title">¿Terminar el test?</h2>
+    <p class="modal-body">Una vez entregues el test no podrás modificar tus respuestas. Se corregirá automáticamente.</p>
+    <div class="modal-actions">
+      <button class="modal-btn-primary" onclick="window.location.href='resultados.html'">Terminar test</button>
+      <button class="modal-btn-ghost" onclick="cerrarModal('modal-terminar')">Seguir respondiendo</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Salir sin guardar -->
+<div class="modal-overlay" id="modal-salir">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-salir')">✕</button>
+    <h2 class="modal-title">¿Salir del test?</h2>
+    <p class="modal-body">Si sales ahora perderás tu progreso en este test. Tu historial de tests anteriores está siempre a salvo.</p>
+    <div class="modal-actions">
+      <button class="modal-btn-primary" onclick="window.location.href='dashboard.html'">Salir sin guardar</button>
+      <button class="modal-btn-ghost" onclick="cerrarModal('modal-salir')">Volver al test</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Pausa (no cierra al hacer click fuera) -->
+<div class="modal-overlay no-close-outside" id="modal-pausa">
+  <div class="modal">
+    <h2 class="modal-title">Test en pausa</h2>
+    <p class="modal-body">El cronómetro está detenido. Cuando estés listo pulsa continuar para seguir respondiendo.</p>
+    <div class="modal-actions">
+      <button class="modal-btn-primary teal" onclick="cerrarModal('modal-pausa')">Continuar el test</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Confirmación genérica (teal) -->
+<div class="modal-overlay" id="modal-generico">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-generico')">✕</button>
+    <h2 class="modal-title">Título del modal</h2>
+    <p class="modal-body">Texto explicativo de la acción que va a realizar el usuario. Breve y claro.</p>
+    <div class="modal-actions">
+      <button class="modal-btn-primary teal" onclick="cerrarModal('modal-generico')">Acción principal</button>
+      <button class="modal-btn-ghost" onclick="cerrarModal('modal-generico')">Cancelar</button>
+      <button class="modal-btn-link" onclick="cerrarModal('modal-generico')">O volver atrás</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function abrirModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+// Cerrar al click fuera, excepto los marcados como no-close-outside
+document.querySelectorAll('.modal-overlay:not(.no-close-outside)').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o) cerrarModal(o.id);
+  });
+});
+</script>
+</body>
+</html>

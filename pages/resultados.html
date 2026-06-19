@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Resultados</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-error: #c11717;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 20px 0 rgba(0,0,0,0.10);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+  --sidebar-w: 60px;
+  --sidebar-gap: 84px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #cde8ed 0%, #ddeef5 40%, #f9ddd4 100%);
+  font-family: var(--font-text);
+  color: var(--color-black);
+  display: flex;
+}
+
+/* ══════════════════════════════
+   SIDEBAR
+══════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 12px; bottom: 12px; left: 12px;
+  width: var(--sidebar-w);
+  background: var(--color-white);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  z-index: 100;
+  transition: width 0.18s ease;
+  overflow: hidden;
+}
+.sidebar:hover { width: 200px; }
+.sidebar-logo {
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 28px;
+  width: var(--sidebar-w);
+  text-align: center;
+  flex-shrink: 0;
+}
+.sidebar nav { width: 100%; flex: 1; }
+.sidebar ul { list-style: none; }
+.sidebar li a {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 19px;
+  gap: 12px;
+  color: var(--color-main-dark);
+  text-decoration: none;
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+.sidebar li a:hover,
+.sidebar li.active a { background: #e8f4f5; }
+.sidebar li.active a { font-weight: 600; }
+.material-symbols-rounded { font-size: 22px; flex-shrink: 0; }
+.nav-text {
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.sidebar:hover .nav-text { opacity: 1; }
+.sidebar-bottom { margin-top: auto; width: 100%; }
+
+/* ══════════════════════════════
+   MAIN
+══════════════════════════════ */
+main {
+  margin-left: var(--sidebar-gap);
+  flex: 1;
+  padding: 40px 36px 60px 20px;
+  max-width: calc(1200px + var(--sidebar-gap) + 36px);
+}
+
+/* ── Encabezado ── */
+.page-title {
+  font-family: var(--font-h1);
+  font-size: 2rem;
+  color: var(--color-black);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.page-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 28px;
+}
+.page-meta span {
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  color: var(--color-main-dark);
+  opacity: 0.75;
+}
+
+/* ══════════════════════════════
+   CARD RESULTADOS GLOBALES
+══════════════════════════════ */
+.card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 32px 36px;
+  margin-bottom: 32px;
+}
+
+.card-label {
+  font-family: var(--font-titles);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 24px;
+}
+
+/* Stats principales */
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  text-align: center;
+  margin-bottom: 28px;
+}
+.stat-item { padding: 0 16px; }
+.stat-item + .stat-item { border-left: 1px solid #e0ecf0; }
+
+.stat-num {
+  font-family: var(--font-h1);
+  font-size: 2.8rem;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-num.ok   { color: var(--color-main); }
+.stat-num.err  { color: var(--color-secondary); }
+.stat-num.time { color: var(--color-black); }
+
+.stat-label {
+  font-family: var(--font-text);
+  font-size: 0.82rem;
+  color: var(--color-main-dark);
+  opacity: 0.65;
+}
+
+/* Stats secundarias */
+.stats-secondary {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  padding: 20px 0;
+  border-top: 1px solid #e0ecf0;
+  border-bottom: 1px solid #e0ecf0;
+  margin-bottom: 24px;
+}
+.stat-sec {
+  text-align: center;
+}
+.stat-sec-val {
+  font-family: var(--font-titles);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-main-dark);
+  display: block;
+  margin-bottom: 3px;
+}
+.stat-sec-label {
+  font-family: var(--font-text);
+  font-size: 0.78rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+}
+
+/* Botones resultado */
+.result-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 12px 28px;
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--br-small);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--color-main-dark); color: var(--color-white); }
+.btn-primary:hover { background: var(--color-main); transform: translateY(-1px); }
+.btn-accent  { background: var(--color-secondary); color: var(--color-white); }
+.btn-accent:hover  { background: var(--color-secondary-dark); transform: translateY(-1px); }
+
+/* ══════════════════════════════
+   SECCIÓN PREGUNTAS
+══════════════════════════════ */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.section-title {
+  font-family: var(--font-titles);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+}
+
+/* Filtros */
+.filtros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filtro-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--color-white);
+  color: var(--color-main-dark);
+  border-color: #c8dde2;
+}
+.filtro-chip:hover { border-color: var(--color-main); color: var(--color-main); }
+.filtro-chip.active-dudosas  { background: #fff3e0; color: #c07000; border-color: #f0c060; }
+.filtro-chip.active-acertadas { background: #d4f0db; color: var(--color-success); border-color: #8ed4a0; }
+.filtro-chip.active-falladas  { background: #f8d7d7; color: var(--color-error); border-color: #f0a0a0; }
+.filtro-chip .chip-x { font-size: 0.7rem; opacity: 0.7; }
+
+/* ── Card pregunta corregida ── */
+.pregunta-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 22px 28px;
+  margin-bottom: 16px;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+}
+.pregunta-card.acertada  { border-color: var(--color-success); }
+.pregunta-card.fallada   { border-color: var(--color-error); }
+.pregunta-card.sin-resp  { border-color: #c8dde2; }
+.pregunta-card.hidden    { display: none; }
+
+.preg-titulo {
+  font-family: var(--font-titles);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+/* Opciones corregidas */
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e8f0f2;
+}
+.opcion:last-of-type { border-bottom: none; }
+
+.opcion-letra {
+  width: 24px; height: 24px;
+  border-radius: 6px 0 6px 0;
+  background: #e0f0f2;
+  color: var(--color-main-dark);
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.opcion-texto {
+  font-family: var(--font-text);
+  font-size: 0.88rem;
+  color: var(--color-black);
+  flex: 1;
+}
+
+/* Estado correcto */
+.opcion.correcta .opcion-letra  { background: var(--color-success); color: var(--color-white); }
+.opcion.correcta .opcion-texto  { color: var(--color-success); font-weight: 600; }
+/* Estado incorrecto (la que marcó el alumno y era errónea) */
+.opcion.incorrecta .opcion-letra { background: var(--color-error); color: var(--color-white); }
+.opcion.incorrecta .opcion-texto { color: var(--color-error); text-decoration: line-through; }
+
+/* Explicación */
+.explicacion-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-family: var(--font-titles);
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+  cursor: pointer;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+.explicacion-toggle:hover { opacity: 0.7; }
+.explicacion-toggle .material-symbols-rounded { font-size: 16px; transition: transform 0.2s; }
+.explicacion-toggle.open .material-symbols-rounded { transform: rotate(180deg); }
+
+.explicacion-texto {
+  display: none;
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: #f5fbfc;
+  border-radius: var(--br-small);
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  color: var(--color-black);
+  line-height: 1.6;
+  border-left: 3px solid var(--color-main-light);
+}
+.explicacion-texto.open { display: block; }
+
+/* Epígrafe */
+.preg-epigrafe {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #e8f0f2;
+  font-size: 0.75rem;
+  color: var(--color-main-dark);
+  opacity: 0.55;
+  font-family: var(--font-text);
+}
+
+/* ══════════════════════════════
+   MÓVIL (< 768px)
+══════════════════════════════ */
+@media (max-width: 767px) {
+  .sidebar {
+    top: auto; left: 12px; right: 12px; bottom: 12px;
+    width: auto !important; height: 62px;
+    flex-direction: row;
+    border-radius: 20px;
+    padding: 0 4px;
+  }
+  .sidebar-logo { display: none; }
+  .sidebar nav { flex: 1; }
+  .sidebar ul { display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: 62px; }
+  .sidebar li { display: flex; }
+  .sidebar li a { width: 50px; height: 50px; padding: 0; justify-content: center; border-radius: 12px; }
+  .nav-text { display: none !important; }
+  .sidebar-bottom { display: none; }
+
+  main { margin-left: 0; margin-bottom: 86px; padding: 24px 14px 40px; }
+
+  .page-title { font-size: 1.4rem; }
+
+  .card { padding: 20px 16px; }
+
+  .stats-row { grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+  .stat-num { font-size: 1.8rem; }
+  .stat-item { padding: 0 8px; }
+
+  .stats-secondary { gap: 24px; }
+
+  .result-actions { flex-direction: column; }
+  .result-actions .btn { width: 100%; text-align: center; }
+
+  .section-header { flex-direction: column; align-items: flex-start; }
+
+  .pregunta-card { padding: 16px 14px; }
+  .preg-titulo { font-size: 0.85rem; }
+  .opcion-texto { font-size: 0.82rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li class="active"><a href="#"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li><a href="#"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main>
+
+  <!-- Encabezado -->
+  <h1 class="page-title">Nombre Test</h1>
+  <div class="page-meta">
+    <span>Nombre de la oposición</span>
+    <span>Nombre del tema</span>
+    <span>Nombre del Bloque</span>
+    <span>Nombre del epígrafe</span>
+  </div>
+
+  <!-- Card resultados globales -->
+  <div class="card">
+    <div class="card-label">Resultados</div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num ok">47</div>
+        <div class="stat-label">Preguntas acertadas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num err">3</div>
+        <div class="stat-label">Preguntas falladas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num time">20:35</div>
+        <div class="stat-label">Tiempo empleado</div>
+      </div>
+    </div>
+
+    <div class="stats-secondary">
+      <div class="stat-sec">
+        <span class="stat-sec-val">47/50</span>
+        <span class="stat-sec-label">Nota</span>
+      </div>
+      <div class="stat-sec">
+        <span class="stat-sec-val">87/100</span>
+        <span class="stat-sec-label">Nota equivalente</span>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="repetirTest()">Repetir todo el test</button>
+      <button class="btn btn-accent" onclick="repetirFalladas()">Repetir preguntas falladas</button>
+    </div>
+  </div>
+
+  <!-- Sección preguntas corregidas -->
+  <div class="section-header">
+    <span class="section-title">Todas las preguntas</span>
+    <div class="filtros" id="filtros">
+      <button class="filtro-chip" data-filtro="dudosas"   onclick="toggleFiltro(this)">Preguntas dudosas</button>
+      <button class="filtro-chip" data-filtro="acertadas" onclick="toggleFiltro(this)">Preguntas acertadas</button>
+      <button class="filtro-chip" data-filtro="falladas"  onclick="toggleFiltro(this)">Preguntas falladas</button>
+    </div>
+  </div>
+
+  <div id="preguntas-container"></div>
+
+</main>
+
+<script>
+// ══════════════════════════════
+// DATOS DE PRUEBA
+// ══════════════════════════════
+const PREGUNTAS = [
+  {
+    id: 1,
+    texto: '¿Cuántos artículos tiene la Constitución Española de 1978?',
+    opciones: ['149 artículos', '169 artículos', '196 artículos'],
+    correcta: 1,    // índice de la opción correcta
+    alumno: 1,      // índice que marcó el alumno (null = sin responder)
+    duda: true,
+    epigrafe: 'Tema 1 — La Constitución Española · Epígrafe 1.1',
+    explicacion: 'La Constitución Española de 1978 consta de 169 artículos, organizados en un Título Preliminar, diez Títulos numerados del I al X, cuatro Disposiciones adicionales, nueve Disposiciones transitorias, una Disposición derogatoria y una Disposición final.'
+  },
+  {
+    id: 2,
+    texto: '¿En qué año entró en vigor la Constitución Española actualmente vigente?',
+    opciones: ['1975', '1977', '1978'],
+    correcta: 2,
+    alumno: 0,      // alumno respondió mal
+    duda: false,
+    epigrafe: 'Tema 1 — La Constitución Española · Epígrafe 1.1',
+    explicacion: 'La Constitución Española fue aprobada por las Cortes Generales el 31 de octubre de 1978, ratificada por referéndum el 6 de diciembre de 1978 y sancionada por el Rey Juan Carlos I el 27 de diciembre, entrando en vigor al día siguiente de su publicación en el BOE, el 29 de diciembre de 1978.'
+  },
+  {
+    id: 3,
+    texto: '¿Cuál es la forma política del Estado español según el artículo 1.3 de la Constitución?',
+    opciones: ['República parlamentaria', 'Monarquía parlamentaria', 'Monarquía constitucional'],
+    correcta: 1,
+    alumno: 1,      // acertó
+    duda: false,
+    epigrafe: 'Tema 1 — La Constitución Española · Epígrafe 1.2',
+    explicacion: 'El artículo 1.3 de la Constitución Española establece literalmente: "La forma política del Estado español es la Monarquía parlamentaria." Esta disposición es especialmente relevante porque define el sistema de gobierno combinando la institución monárquica con el principio de soberanía parlamentaria.'
+  },
+  {
+    id: 4,
+    texto: 'Según el artículo 2 de la Constitución, ¿sobre qué principio se fundamenta en relación con las nacionalidades y regiones?',
+    opciones: ['Autonomía plena de cada región', 'Indisoluble unidad de la Nación española', 'Confederación de territorios autónomos'],
+    correcta: 1,
+    alumno: null,   // sin responder
+    duda: false,
+    epigrafe: 'Tema 1 — La Constitución Española · Epígrafe 1.2',
+    explicacion: 'El artículo 2 de la Constitución establece que "La Constitución se fundamenta en la indisoluble unidad de la Nación española, patria común e indivisible de todos los españoles, y reconoce y garantiza el derecho a la autonomía de las nacionalidades y regiones que la integran y la solidaridad entre todas ellas."'
+  },
+  {
+    id: 5,
+    texto: '¿Quién es el titular de la soberanía nacional según la Constitución Española?',
+    opciones: ['El Jefe del Estado', 'El Parlamento', 'El pueblo español'],
+    correcta: 2,
+    alumno: 2,      // acertó
+    duda: false,
+    epigrafe: 'Tema 1 — La Constitución Española · Epígrafe 1.3',
+    explicacion: 'El artículo 1.2 de la Constitución establece que "La soberanía nacional reside en el pueblo español, del que emanan los poderes del Estado." Este principio es la base del sistema democrático español y establece que todo poder político tiene su origen y legitimidad en la ciudadanía.'
+  }
+];
+
+// ══════════════════════════════
+// FILTRO ACTIVO
+// ══════════════════════════════
+let filtroActivo = null;
+
+function toggleFiltro(btn) {
+  const f = btn.dataset.filtro;
+  // Si ya estaba activo, desactivar
+  if (filtroActivo === f) {
+    filtroActivo = null;
+    btn.classList.remove('active-dudosas','active-acertadas','active-falladas');
+  } else {
+    filtroActivo = f;
+    // Desactivar todos
+    document.querySelectorAll('.filtro-chip').forEach(c =>
+      c.classList.remove('active-dudosas','active-acertadas','active-falladas')
+    );
+    btn.classList.add('active-' + f);
+  }
+  renderPreguntas();
+}
+
+// ══════════════════════════════
+// RENDER
+// ══════════════════════════════
+function estadoPregunta(p) {
+  if (p.alumno === null) return 'sin-resp';
+  return p.alumno === p.correcta ? 'acertada' : 'fallada';
+}
+
+function renderPreguntas() {
+  const c = document.getElementById('preguntas-container');
+  c.innerHTML = '';
+
+  PREGUNTAS.forEach(p => {
+    const estado = estadoPregunta(p);
+
+    // Filtrado
+    let visible = true;
+    if (filtroActivo === 'dudosas'   && !p.duda)            visible = false;
+    if (filtroActivo === 'acertadas' && estado !== 'acertada') visible = false;
+    if (filtroActivo === 'falladas'  && estado !== 'fallada')  visible = false;
+
+    const card = document.createElement('div');
+    card.className = `pregunta-card ${estado} ${visible ? '' : 'hidden'}`;
+
+    // Opciones
+    const opcionesHTML = p.opciones.map((op, i) => {
+      let cls = '';
+      if (i === p.correcta) cls = 'correcta';
+      else if (i === p.alumno && p.alumno !== p.correcta) cls = 'incorrecta';
+      return `
+        <div class="opcion ${cls}">
+          <div class="opcion-letra">${String.fromCharCode(65+i)}</div>
+          <div class="opcion-texto">${op}</div>
+        </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="preg-titulo">${p.id}. ${p.texto}</div>
+      <div class="opciones">${opcionesHTML}</div>
+      <button class="explicacion-toggle" id="toggle-${p.id}" onclick="toggleExplicacion(${p.id})">
+        ver explicación
+        <span class="material-symbols-rounded">expand_more</span>
+      </button>
+      <div class="explicacion-texto" id="exp-${p.id}">${p.explicacion}</div>
+      <div class="preg-epigrafe">${p.epigrafe}</div>
+    `;
+    c.appendChild(card);
+  });
+}
+
+function toggleExplicacion(id) {
+  const exp = document.getElementById('exp-' + id);
+  const btn = document.getElementById('toggle-' + id);
+  exp.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function repetirTest() {
+  window.location.href = 'configurar-test.html';
+}
+function repetirFalladas() {
+  window.location.href = 'test-activo.html';
+}
+
+// Init
+renderPreguntas();
+</script>
+</body>
+</html>

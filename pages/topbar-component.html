@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+/* ─────────────────────────────────────────
+   test-topbar.css
+   Uso: <link rel="stylesheet" href="components/test-topbar.css">
+   ───────────────────────────────────────── */
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 20px 0 rgba(0,0,0,0.12);
+  --br-small: 10px 0 10px 0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0c4a8 0%, #f5d5c0 30%, #ddeef5 70%, #cde8ed 100%);
+  padding: 20px;
+  font-family: var(--font-text);
+}
+
+/* ══════════════════════════════
+   TOPBAR WRAPPER
+   Uso: pegar este bloque justo
+   antes del <main> en test-activo
+══════════════════════════════ */
+.topbar-wrap {
+  position: sticky;
+  top: 16px;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px;
+  pointer-events: none;
+}
+
+.topbar {
+  background: var(--color-white);
+  border-radius: 99px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 1200px;
+  pointer-events: all;
+}
+
+/* ── Cronómetro ── */
+.topbar-crono {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.topbar-crono .material-symbols-rounded {
+  font-size: 22px;
+  color: var(--color-main);
+  transition: color 0.3s;
+}
+.crono-time {
+  font-family: var(--font-titles);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-main-dark);
+  letter-spacing: 0.05em;
+  min-width: 52px;
+  transition: color 0.3s;
+}
+/* Estado warning — aplicar clase .warning al .topbar-crono */
+.topbar-crono.warning .material-symbols-rounded { color: var(--color-secondary); }
+.topbar-crono.warning .crono-time { color: var(--color-secondary); }
+
+/* ── Progreso ── */
+.topbar-progress {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.prog-track {
+  flex: 1;
+  height: 8px;
+  background: #d9eef0;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 60px;
+}
+.prog-fill {
+  height: 100%;
+  background: var(--color-main);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+.prog-count {
+  font-family: var(--font-titles);
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-main-dark);
+  flex-shrink: 0;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* ── Acciones ── */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.topbar-btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.topbar-btn-icon.pause { color: var(--color-main-dark); }
+.topbar-btn-icon.pause:hover { background: #e8f4f5; }
+.topbar-btn-icon.exit  { color: var(--color-secondary); }
+.topbar-btn-icon.exit:hover  { background: #ffe4d6; }
+.topbar-btn-icon .material-symbols-rounded { font-size: 24px; }
+
+.topbar-btn-finish {
+  background: var(--color-main-dark);
+  color: var(--color-white);
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.topbar-btn-finish:hover { background: var(--color-main); }
+
+/* ══════════════════════════════
+   MÓVIL (< 768px)
+══════════════════════════════ */
+@media (max-width: 767px) {
+  .topbar-wrap { top: 10px; padding: 0 12px; }
+  .topbar { gap: 8px; padding: 8px 12px; border-radius: 16px; }
+  .crono-time { font-size: 0.85rem; }
+  .prog-count { font-size: 0.78rem; }
+  .topbar-btn-finish { font-size: 0.7rem; padding: 7px 10px; }
+}
+
+/* ── Demo styles (quitar en producción) ── */
+.demo-label {
+  font-family: var(--font-titles);
+  font-size: 0.7rem;
+  color: var(--color-main);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 2rem 0 0.5rem;
+  opacity: 0.7;
+}
+</style>
+</head>
+<body>
+
+<!--
+  ════════════════════════════════════════
+  SNIPPET HTML — copiar en test-activo.html
+  Pegar justo antes del <main>
+  ════════════════════════════════════════
+
+  JS necesario (ya incluido en test-activo.html):
+  - tickCrono()       → actualiza #crono-display cada segundo
+  - togglePausa()     → pausa/reanuda y cambia el icono
+  - abrirModal(id)    → abre modal-terminar o modal-salir
+  - actualizarProgreso() → actualiza #prog-fill y #prog-count
+-->
+
+<p class="demo-label">Estado normal</p>
+<div class="topbar-wrap">
+  <div class="topbar">
+    <div class="topbar-crono">
+      <span class="material-symbols-rounded">timer</span>
+      <span class="crono-time" id="crono-display">00:00</span>
+    </div>
+    <div class="topbar-progress">
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill" style="width: 48%"></div>
+      </div>
+      <span class="prog-count" id="prog-count">24</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn-icon pause" title="Pausar" onclick="togglePausa()">
+        <span class="material-symbols-rounded" id="pause-icon">pause</span>
+      </button>
+      <button class="topbar-btn-finish" onclick="abrirModal('modal-terminar')">Terminar y corregir</button>
+      <button class="topbar-btn-icon exit" title="Salir" onclick="abrirModal('modal-salir')">
+        <span class="material-symbols-rounded">logout</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<p class="demo-label">Estado warning (tiempo bajo)</p>
+<div class="topbar-wrap" style="position:relative; top:auto; margin-top: 1rem;">
+  <div class="topbar">
+    <div class="topbar-crono warning">
+      <span class="material-symbols-rounded">timer</span>
+      <span class="crono-time">01:45</span>
+    </div>
+    <div class="topbar-progress">
+      <div class="prog-track">
+        <div class="prog-fill" style="width: 92%"></div>
+      </div>
+      <span class="prog-count">46</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn-icon pause" title="Pausar">
+        <span class="material-symbols-rounded">pause</span>
+      </button>
+      <button class="topbar-btn-finish">Terminar y corregir</button>
+      <button class="topbar-btn-icon exit" title="Salir">
+        <span class="material-symbols-rounded">logout</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Demo: cronómetro en vivo para la primera topbar
+let s = 0;
+setInterval(() => {
+  s++;
+  const m = Math.floor(s/60).toString().padStart(2,'0');
+  const ss = (s%60).toString().padStart(2,'0');
+  document.getElementById('crono-display').textContent = m+':'+ss;
+}, 1000);
+
+// Stubs para que no fallen los onclick del snippet
+function togglePausa() {}
+function abrirModal(id) {}
+</script>
+</body>
+</html>

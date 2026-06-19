@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Test activo</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-error: #c11717;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 20px 0 rgba(0,0,0,0.12);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0c4a8 0%, #f5d5c0 30%, #ddeef5 70%, #cde8ed 100%);
+  font-family: var(--font-text);
+  color: var(--color-black);
+}
+
+/* ══════════════════════════════
+   TOPBAR
+══════════════════════════════ */
+.topbar-wrap {
+  position: sticky;
+  top: 16px;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px;
+  pointer-events: none;
+}
+
+.topbar {
+  background: var(--color-white);
+  border-radius: 99px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 1200px;
+  pointer-events: all;
+}
+
+/* Cronómetro */
+.crono {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.crono .material-symbols-rounded {
+  font-size: 22px;
+  color: var(--color-main);
+}
+.crono-time {
+  font-family: var(--font-titles);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-main-dark);
+  letter-spacing: 0.05em;
+  min-width: 52px;
+}
+.crono-time.warning { color: var(--color-secondary); }
+
+/* Barra de progreso + contador */
+.progress-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.prog-track {
+  flex: 1;
+  height: 8px;
+  background: #d9eef0;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 60px;
+}
+.prog-fill {
+  height: 100%;
+  background: var(--color-main);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.prog-count {
+  font-family: var(--font-titles);
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-main-dark);
+  flex-shrink: 0;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Acciones topbar */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.btn-pause {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-main-dark);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.btn-pause:hover { background: #e8f4f5; }
+.btn-pause .material-symbols-rounded { font-size: 24px; }
+
+.btn-terminar {
+  background: var(--color-main-dark);
+  color: var(--color-white);
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.btn-terminar:hover { background: var(--color-main); }
+
+.btn-salir {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.btn-salir:hover { background: #ffe4d6; }
+.btn-salir .material-symbols-rounded { font-size: 24px; }
+
+/* ══════════════════════════════
+   CONTENIDO PRINCIPAL
+══════════════════════════════ */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px 80px;
+}
+
+.test-titulo {
+  font-family: var(--font-h1);
+  font-size: 1.5rem;
+  color: var(--color-main-dark);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* ── Card pregunta ── */
+.pregunta-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+
+.pregunta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 16px;
+}
+
+.pregunta-titulo {
+  font-family: var(--font-titles);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-black);
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* Marcadores */
+.marcadores {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.marcador {
+  width: 32px; height: 32px;
+  border-radius: 8px 0 8px 0;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  background: #f0f8fa;
+  transition: all 0.15s;
+}
+.marcador .material-symbols-rounded { font-size: 17px; color: var(--color-main-dark); opacity: 0.4; }
+.marcador:hover { background: #ddeef0; }
+.marcador:hover .material-symbols-rounded { opacity: 0.8; }
+.marcador.active-duda  { background: #fff3e0; }
+.marcador.active-duda  .material-symbols-rounded { color: #c07000; opacity: 1; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; }
+.marcador.active-fav   { background: #ffe4d6; }
+.marcador.active-fav   .material-symbols-rounded { color: var(--color-secondary); opacity: 1; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; }
+.marcador.active-dest  { background: #e0ecf8; }
+.marcador.active-dest  .material-symbols-rounded { color: var(--color-main-dark); opacity: 1; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; }
+
+/* ── Opciones de respuesta ── */
+.opciones { display: flex; flex-direction: column; }
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid #e8f0f2;
+  cursor: pointer;
+  transition: background 0.12s;
+  border-radius: 4px;
+}
+.opcion:last-child { border-bottom: none; }
+.opcion:hover { background: #f5fbfc; }
+.opcion:hover .opcion-letra { background: var(--color-main); color: var(--color-white); }
+
+.opcion-letra {
+  width: 26px; height: 26px;
+  border-radius: 6px 0 6px 0;
+  background: #e0f0f2;
+  color: var(--color-main-dark);
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.opcion-texto {
+  font-family: var(--font-text);
+  font-size: 0.9rem;
+  color: var(--color-black);
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* Estados seleccionado */
+.opcion.selected .opcion-letra {
+  background: var(--color-main-dark);
+  color: var(--color-white);
+}
+.opcion.selected .opcion-texto { font-weight: 600; }
+
+/* ── Epígrafe ── */
+.pregunta-epigrafe {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e8f0f2;
+  font-family: var(--font-text);
+  font-size: 0.78rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+}
+
+/* ══════════════════════════════
+   BOTÓN LLAVE (lateral)
+══════════════════════════════ */
+.wrench-wrap {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.wrench-panel {
+  background: var(--color-white);
+  border-radius: 16px 0 0 16px;
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+  transform: translateX(20px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  min-width: 170px;
+}
+.wrench-wrap:hover .wrench-panel,
+.wrench-wrap.open .wrench-panel {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.toggle-label {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: var(--color-main-dark);
+  white-space: nowrap;
+}
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 36px; height: 20px;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #c8dde2;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  left: 3px; top: 3px;
+  background: var(--color-white);
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--color-main); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+.wrench-btn {
+  background: var(--color-white);
+  border: none;
+  border-radius: 50%;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  flex-shrink: 0;
+  transition: background 0.15s;
+  color: var(--color-main);
+}
+.wrench-btn:hover { background: #e8f4f5; }
+.wrench-btn .material-symbols-rounded { font-size: 22px; }
+
+/* ══════════════════════════════
+   MODAL
+══════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,38,52,0.5);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  padding: 2.5rem 2rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  position: relative;
+  transform: scale(0.95);
+  transition: transform 0.2s ease;
+}
+.modal-overlay.open .modal { transform: scale(1); }
+
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-main-dark);
+  opacity: 0.5;
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: opacity 0.15s;
+}
+.modal-close:hover { opacity: 1; }
+
+.modal-title {
+  font-family: var(--font-h1);
+  font-size: 1.4rem;
+  color: var(--color-main-dark);
+  margin-bottom: 0.75rem;
+}
+.modal-body {
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  color: var(--color-black);
+  opacity: 0.65;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+.btn-modal-primary {
+  background: var(--color-secondary);
+  color: var(--color-white);
+  font-family: var(--font-titles);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: var(--br-small);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s;
+}
+.btn-modal-primary:hover { background: var(--color-secondary-dark); }
+.btn-modal-ghost {
+  background: none;
+  border: 1px solid var(--color-main-dark);
+  color: var(--color-main-dark);
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  padding: 10px 32px;
+  border-radius: var(--br-small);
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s;
+}
+.btn-modal-ghost:hover { background: #e8f4f5; }
+
+/* ══════════════════════════════
+   MÓVIL (< 768px)
+══════════════════════════════ */
+@media (max-width: 767px) {
+  .topbar-wrap { top: 10px; padding: 0 12px; }
+  .topbar { gap: 8px; padding: 8px 12px; border-radius: 16px; }
+  .crono-time { font-size: 0.85rem; }
+  .btn-terminar { font-size: 0.7rem; padding: 7px 10px; }
+  .prog-count { font-size: 0.78rem; }
+
+  .main-content { padding: 20px 12px 100px; }
+  .test-titulo { font-size: 1.1rem; margin-bottom: 18px; }
+
+  .pregunta-card { padding: 16px 14px; }
+  .pregunta-titulo { font-size: 0.88rem; }
+  .opcion { gap: 10px; padding: 11px 0; }
+  .opcion-texto { font-size: 0.82rem; }
+
+  .wrench-wrap { display: none; }
+
+  /* Modal full bottom en móvil */
+  .modal-overlay { align-items: flex-end; padding: 0; }
+  .modal { border-radius: 20px 0 0 0; max-width: 100%; padding: 2rem 1.25rem 2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════
+   TOPBAR
+══════════════════════════ -->
+<div class="topbar-wrap">
+  <div class="topbar">
+
+    <div class="crono">
+      <span class="material-symbols-rounded">timer</span>
+      <span class="crono-time" id="crono-display">00:00</span>
+    </div>
+
+    <div class="progress-area">
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <span class="prog-count" id="prog-count">0</span>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="btn-pause" id="btn-pause" title="Pausar" onclick="togglePausa()">
+        <span class="material-symbols-rounded" id="pause-icon">pause</span>
+      </button>
+      <button class="btn-terminar" onclick="abrirModal('modal-terminar')">Terminar y corregir</button>
+      <button class="btn-salir" title="Salir" onclick="abrirModal('modal-salir')">
+        <span class="material-symbols-rounded">logout</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════
+   CONTENIDO
+══════════════════════════ -->
+<div class="main-content">
+  <h1 class="test-titulo">Título Test</h1>
+  <div id="preguntas-container"></div>
+</div>
+
+<!-- ══════════════════════════
+   BOTÓN LLAVE
+══════════════════════════ -->
+<div class="wrench-wrap" id="wrench-wrap">
+  <div class="wrench-panel">
+    <div class="toggle-row">
+      <span class="toggle-label">Opción A</span>
+      <label class="toggle-switch">
+        <input type="checkbox" checked/>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Opción B</span>
+      <label class="toggle-switch">
+        <input type="checkbox" checked/>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Opción C</span>
+      <label class="toggle-switch">
+        <input type="checkbox"/>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+  <button class="wrench-btn" title="Opciones">
+    <span class="material-symbols-rounded">settings</span>
+  </button>
+</div>
+
+<!-- ══════════════════════════
+   MODAL PAUSA / TERMINAR
+══════════════════════════ -->
+<div class="modal-overlay" id="modal-terminar">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-terminar')">✕</button>
+    <h2 class="modal-title">¿Terminar el test?</h2>
+    <p class="modal-body">Una vez entregues el test no podrás modificar tus respuestas. Se corregirá automáticamente.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-primary" onclick="window.location.href='resultados.html'">Terminar test</button>
+      <button class="btn-modal-ghost" onclick="cerrarModal('modal-terminar')">Seguir respondiendo</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-salir">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-salir')">✕</button>
+    <h2 class="modal-title">¿Salir del test?</h2>
+    <p class="modal-body">Si sales ahora perderás tu progreso en este test. Tu historial de tests anteriores está siempre a salvo.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-primary" onclick="window.location.href='dashboard.html'">Salir sin guardar</button>
+      <button class="btn-modal-ghost" onclick="cerrarModal('modal-salir')">Volver al test</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pausa">
+  <div class="modal">
+    <h2 class="modal-title">Test en pausa</h2>
+    <p class="modal-body">El cronómetro está detenido. Cuando estés listo, pulsa continuar para seguir respondiendo.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-primary" onclick="reanudar()">Continuar el test</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════
+// DATOS DE PRUEBA
+// ══════════════════════════════
+const PREGUNTAS = [
+  { id:1, texto:'¿Cuántos artículos tiene la Constitución Española de 1978?', opciones:['149 artículos','169 artículos','196 artículos'], epigrafe:'Tema 1 — La Constitución Española · Epígrafe 1.1' },
+  { id:2, texto:'¿En qué año entró en vigor la Constitución Española actualmente vigente?', opciones:['1975','1977','1978'], epigrafe:'Tema 1 — La Constitución Española · Epígrafe 1.1' },
+  { id:3, texto:'¿Cuál es la forma política del Estado español según el artículo 1.3 de la Constitución?', opciones:['República parlamentaria','Monarquía parlamentaria','Monarquía constitucional'], epigrafe:'Tema 1 — La Constitución Española · Epígrafe 1.2' },
+  { id:4, texto:'Según el artículo 2 de la Constitución, ¿sobre qué principio se fundamenta la Constitución en relación con las nacionalidades y regiones?', opciones:['Autonomía plena de cada región','Indisoluble unidad de la Nación española','Confederación de territorios autónomos'], epigrafe:'Tema 1 — La Constitución Española · Epígrafe 1.2' },
+  { id:5, texto:'¿Quién es el titular de la soberanía nacional según la Constitución Española?', opciones:['El Jefe del Estado','El Parlamento','El pueblo español'], epigrafe:'Tema 1 — La Constitución Española · Epígrafe 1.3' },
+];
+
+const TOTAL = PREGUNTAS.length;
+const respuestas = {}; // { preguntaId: opcionIndex }
+const marcadores = {}; // { preguntaId: { duda, fav, dest } }
+
+// ══════════════════════════════
+// RENDER PREGUNTAS
+// ══════════════════════════════
+function renderPreguntas() {
+  const c = document.getElementById('preguntas-container');
+  c.innerHTML = '';
+  PREGUNTAS.forEach(p => {
+    const m = marcadores[p.id] || {};
+    const card = document.createElement('div');
+    card.className = 'pregunta-card';
+    card.id = 'pregunta-' + p.id;
+    card.innerHTML = `
+      <div class="pregunta-header">
+        <div class="pregunta-titulo">${p.id}. ${p.texto}</div>
+        <div class="marcadores">
+          <button class="marcador ${m.duda ? 'active-duda':''}" title="Marcar duda" onclick="toggleMarcador(${p.id},'duda')">
+            <span class="material-symbols-rounded">help</span>
+          </button>
+          <button class="marcador ${m.fav ? 'active-fav':''}" title="Marcar favorito" onclick="toggleMarcador(${p.id},'fav')">
+            <span class="material-symbols-rounded">favorite</span>
+          </button>
+          <button class="marcador ${m.dest ? 'active-dest':''}" title="Destacar" onclick="toggleMarcador(${p.id},'dest')">
+            <span class="material-symbols-rounded">push_pin</span>
+          </button>
+        </div>
+      </div>
+      <div class="opciones">
+        ${p.opciones.map((op, i) => `
+          <div class="opcion ${respuestas[p.id] === i ? 'selected':''}"
+               onclick="seleccionarRespuesta(${p.id}, ${i})">
+            <div class="opcion-letra">${String.fromCharCode(65+i)}</div>
+            <div class="opcion-texto">${op}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="pregunta-epigrafe">${p.epigrafe}</div>
+    `;
+    c.appendChild(card);
+  });
+}
+
+// ══════════════════════════════
+// RESPUESTAS Y MARCADORES
+// ══════════════════════════════
+function seleccionarRespuesta(id, idx) {
+  if (pausado) return;
+  const yaEstaba = respuestas[id] === idx;
+  if (yaEstaba) delete respuestas[id];
+  else respuestas[id] = idx;
+  actualizarProgreso();
+  renderPreguntas();
+}
+
+function toggleMarcador(id, tipo) {
+  if (!marcadores[id]) marcadores[id] = {};
+  marcadores[id][tipo] = !marcadores[id][tipo];
+  renderPreguntas();
+}
+
+function actualizarProgreso() {
+  const respondidas = Object.keys(respuestas).length;
+  const pct = (respondidas / TOTAL) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = respondidas;
+}
+
+// ══════════════════════════════
+// CRONÓMETRO
+// ══════════════════════════════
+let segundos = 0;
+let pausado = false;
+let intervalo;
+
+function formatTime(s) {
+  const m = Math.floor(s / 60).toString().padStart(2,'0');
+  const ss = (s % 60).toString().padStart(2,'0');
+  return m + ':' + ss;
+}
+
+function tickCrono() {
+  segundos++;
+  const el = document.getElementById('crono-display');
+  el.textContent = formatTime(segundos);
+}
+
+function togglePausa() {
+  if (!pausado) {
+    pausado = true;
+    clearInterval(intervalo);
+    document.getElementById('pause-icon').textContent = 'play_arrow';
+    abrirModal('modal-pausa');
+  } else {
+    reanudar();
+  }
+}
+
+function reanudar() {
+  pausado = false;
+  intervalo = setInterval(tickCrono, 1000);
+  document.getElementById('pause-icon').textContent = 'pause';
+  cerrarModal('modal-pausa');
+}
+
+// ══════════════════════════════
+// MODALES
+// ══════════════════════════════
+function abrirModal(id) {
+  if (id === 'modal-terminar' || id === 'modal-salir') {
+    // Pausar cronómetro al abrir modal importante
+    if (!pausado) {
+      clearInterval(intervalo);
+    }
+  }
+  document.getElementById(id).classList.add('open');
+}
+
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('open');
+  // Reanudar si no estaba pausado manualmente
+  if ((id === 'modal-terminar' || id === 'modal-salir') && !pausado) {
+    intervalo = setInterval(tickCrono, 1000);
+  }
+}
+
+// Cerrar modal al hacer click fuera
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) {
+      const id = overlay.id;
+      if (id !== 'modal-pausa') cerrarModal(id);
+    }
+  });
+});
+
+// ══════════════════════════════
+// INIT
+// ══════════════════════════════
+renderPreguntas();
+intervalo = setInterval(tickCrono, 1000);
+</script>
+</body>
+</html>

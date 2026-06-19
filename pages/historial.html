@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Historial de tests — opositivo.es</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-error: #c11717;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 10px 0 rgba(0,0,0,0.2);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+  --sidebar-w: 60px;
+  --sidebar-gap: 84px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { min-height:100vh; background:linear-gradient(135deg,#cde8ed 0%,#ddeef5 40%,#f9ddd4 100%); font-family:var(--font-text); color:var(--color-black); display:flex; overflow-x:hidden; }
+
+/* ══ SIDEBAR ══ */
+.sidebar { position:fixed; top:12px; bottom:12px; left:12px; width:var(--sidebar-w); background:var(--color-white); border-radius:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; padding:16px 0; z-index:100; transition:width 0.18s ease; overflow:hidden; }
+.sidebar:hover { width:200px; }
+.sidebar-logo { font-family:var(--font-titles); font-size:0.65rem; font-weight:600; color:var(--color-main); margin-bottom:28px; width:var(--sidebar-w); text-align:center; flex-shrink:0; }
+.sidebar nav { width:100%; flex:1; }
+.sidebar ul { list-style:none; }
+.sidebar li a { display:flex; align-items:center; height:48px; padding:0 19px; gap:12px; color:var(--color-main-dark); text-decoration:none; transition:background 0.1s; white-space:nowrap; }
+.sidebar li a:hover, .sidebar li.active a { background:#e8f4f5; }
+.sidebar li.active a { font-weight:600; }
+.material-symbols-rounded { font-size:22px; flex-shrink:0; }
+.nav-text { font-family:var(--font-titles); font-size:0.85rem; opacity:0; transition:opacity 0.12s ease; }
+.sidebar:hover .nav-text { opacity:1; }
+.sidebar-bottom { margin-top:auto; width:100%; }
+
+/* ══ MAIN ══ */
+main { margin-left:var(--sidebar-gap); flex:1; padding:36px 36px 60px 20px; min-width:0; max-width:calc(1000px + var(--sidebar-gap) + 36px); }
+
+.page-label { font-family:var(--font-titles); font-size:0.9rem; color:var(--color-main); margin-bottom:4px; }
+.page-title { font-family:var(--font-h1); font-size:1.8rem; color:var(--color-main-dark); margin-bottom:24px; line-height:1.2; }
+
+/* ══ STATS RESUMEN ══ */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+.stat-card { background:var(--color-white); border-radius:var(--br-big); box-shadow:var(--shadow); padding:16px 18px; text-align:center; }
+.stat-num { font-family:var(--font-h1); font-size:1.5rem; color:var(--color-main-dark); line-height:1; margin-bottom:5px; }
+.stat-num.success { color:var(--color-success); }
+.stat-num.accent  { color:var(--color-secondary); }
+.stat-label { font-family:var(--font-text); font-size:0.7rem; color:var(--color-main-dark); opacity:0.6; }
+
+/* ══ TOOLBAR ══ */
+.toolbar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+.search-wrap { position:relative; flex:1; min-width:180px; }
+.search-wrap .material-symbols-rounded { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:18px; color:var(--color-main-dark); opacity:0.4; pointer-events:none; }
+.search-input { width:100%; border:1px solid #c8dde2; border-radius:var(--br-small); background:var(--color-white); color:var(--color-black); font-family:var(--font-titles); font-size:0.82rem; padding:10px 14px 10px 38px; box-shadow:var(--shadow); transition:border-color 0.15s; }
+.search-input:focus { outline:none; border-color:var(--color-main); }
+.search-input::placeholder { color:var(--color-main-dark); opacity:0.35; }
+.filter-select { border:1px solid #c8dde2; border-radius:var(--br-small); background:var(--color-white); color:var(--color-main-dark); font-family:var(--font-titles); font-size:0.78rem; padding:10px 30px 10px 12px; cursor:pointer; box-shadow:var(--shadow); appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23085d7c' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; background-color:var(--color-white); }
+.filter-select:focus { outline:none; border-color:var(--color-main); }
+.count-label { font-family:var(--font-titles); font-size:0.75rem; color:var(--color-main-dark); opacity:0.55; margin-left:auto; white-space:nowrap; }
+.count-label span { font-weight:700; opacity:1; }
+
+/* ══ TABLA ══ */
+.tabla-wrap { background:var(--color-white); border-radius:var(--br-big); box-shadow:var(--shadow); overflow:hidden; }
+
+table { width:100%; border-collapse:collapse; font-family:var(--font-titles); font-size:0.78rem; }
+thead tr { border-bottom:2px solid #e0ecf0; }
+thead th { padding:14px 16px; text-align:left; font-weight:700; color:var(--color-main); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; cursor:pointer; white-space:nowrap; user-select:none; transition:color 0.15s; }
+thead th:hover { color:var(--color-main-dark); }
+thead th .sort-icon { font-size:13px; opacity:0.4; vertical-align:middle; margin-left:3px; }
+thead th.sorted .sort-icon { opacity:1; color:var(--color-secondary); }
+
+tbody tr { border-bottom:1px solid #f0f6f8; transition:background 0.1s; cursor:pointer; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:#f5fbfc; }
+
+tbody td { padding:13px 16px; color:var(--color-main-dark); vertical-align:middle; }
+td.td-fecha { opacity:0.6; font-size:0.72rem; white-space:nowrap; }
+td.td-scope { font-weight:600; }
+td.td-tema  { opacity:0.7; font-size:0.72rem; }
+td.td-modo  { }
+
+/* Nota badge */
+.nota-badge {
+  display:inline-flex;
+  align-items:center;
+  padding:4px 10px;
+  border-radius:var(--br-small);
+  font-family:var(--font-titles);
+  font-size:0.75rem;
+  font-weight:700;
+}
+.nota-ok   { background:#d4f0db; color:var(--color-success); }
+.nota-mid  { background:#fff3e0; color:#c07000; }
+.nota-bad  { background:#f8d7d7; color:var(--color-error); }
+
+td.td-correctas { color:var(--color-success); font-weight:700; }
+td.td-falladas  { color:var(--color-secondary); font-weight:700; }
+td.td-tiempo    { opacity:0.7; }
+
+.td-acciones { text-align:right; white-space:nowrap; }
+.btn-ver {
+  background:none; border:none; cursor:pointer;
+  font-family:var(--font-titles); font-size:0.72rem;
+  color:var(--color-secondary); text-decoration:underline;
+  padding:0; transition:opacity 0.15s;
+}
+.btn-ver:hover { opacity:0.7; }
+
+/* Paginación */
+.paginacion {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px;
+  border-top:1px solid #e0ecf0;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.pag-info { font-family:var(--font-titles); font-size:0.72rem; color:var(--color-main-dark); opacity:0.55; }
+.pag-btns { display:flex; gap:6px; }
+.pag-btn {
+  padding:6px 12px;
+  font-family:var(--font-titles);
+  font-size:0.75rem;
+  font-weight:600;
+  border-radius:var(--br-small);
+  border:1px solid #c8dde2;
+  background:var(--color-white);
+  color:var(--color-main-dark);
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:all 0.15s;
+}
+.pag-btn:hover { background:var(--color-main-dark); color:var(--color-white); border-color:var(--color-main-dark); }
+.pag-btn:disabled { opacity:0.35; cursor:default; pointer-events:none; }
+.pag-btn.active { background:var(--color-main-dark); color:var(--color-white); border-color:var(--color-main-dark); }
+
+/* Empty */
+.empty-row td { text-align:center; padding:48px; color:var(--color-main-dark); opacity:0.4; font-family:var(--font-titles); font-size:0.82rem; }
+
+/* ══ MÓVIL ══ */
+@media (max-width:767px) {
+  .sidebar { top:auto; left:12px; right:12px; bottom:12px; width:auto !important; height:62px; flex-direction:row; border-radius:20px; padding:0 4px; }
+  .sidebar-logo { display:none; }
+  .sidebar nav { flex:1; }
+  .sidebar ul { display:flex; flex-direction:row; justify-content:space-around; align-items:center; height:62px; }
+  .sidebar li { display:flex; }
+  .sidebar li a { width:50px; height:50px; padding:0; justify-content:center; border-radius:12px; }
+  .nav-text { display:none !important; }
+  .sidebar-bottom { display:none; }
+  main { margin-left:0; margin-bottom:86px; padding:20px 14px 40px; width:100%; max-width:100%; overflow-x:hidden; }
+  .page-title { font-size:1.35rem; margin-bottom:18px; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .toolbar { gap:8px; }
+  .search-wrap { min-width:100%; }
+  .count-label { margin-left:0; }
+  /* Tabla scroll horizontal en móvil */
+  .tabla-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table { min-width:640px; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li><a href="mis-oposiciones.html"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li class="active"><a href="estadisticas.html"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li><a href="perfil.html"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<main>
+  <p class="page-label">Estadísticas</p>
+  <h1 class="page-title">Historial de Tests</h1>
+
+  <!-- Stats resumen -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">47</div>
+      <div class="stat-label">Tests totales</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num success">8,2</div>
+      <div class="stat-label">Nota media</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num accent">9,8</div>
+      <div class="stat-label">Mejor nota</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">14:22</div>
+      <div class="stat-label">Tiempo medio</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="material-symbols-rounded">search</span>
+      <input class="search-input" type="text" placeholder="Buscar por oposición o tema..." id="search-input" oninput="filtrarYRender()"/>
+    </div>
+    <select class="filter-select" id="filter-oposicion" onchange="filtrarYRender()">
+      <option value="">Todas las oposiciones</option>
+      <option value="Cuerpo Administrativo">Cuerpo Administrativo</option>
+      <option value="Auxiliar Administrativo">Auxiliar Administrativo</option>
+      <option value="Hacienda">Hacienda</option>
+    </select>
+    <select class="filter-select" id="filter-nota" onchange="filtrarYRender()">
+      <option value="">Cualquier nota</option>
+      <option value="aprobado">Aprobado (≥5)</option>
+      <option value="notable">Notable (≥7)</option>
+      <option value="suspenso">Suspenso (<5)</option>
+    </select>
+    <select class="filter-select" id="filter-orden" onchange="filtrarYRender()">
+      <option value="fecha-desc">Más reciente primero</option>
+      <option value="fecha-asc">Más antiguo primero</option>
+      <option value="nota-desc">Mejor nota primero</option>
+      <option value="nota-asc">Peor nota primero</option>
+    </select>
+    <span class="count-label"><span id="count">0</span> resultados</span>
+  </div>
+
+  <!-- Tabla -->
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('fecha')">Fecha <span class="material-symbols-rounded sort-icon" id="sort-fecha">unfold_more</span></th>
+          <th onclick="sortBy('oposicion')">Oposición <span class="material-symbols-rounded sort-icon" id="sort-oposicion">unfold_more</span></th>
+          <th onclick="sortBy('tema')">Tema <span class="material-symbols-rounded sort-icon" id="sort-tema">unfold_more</span></th>
+          <th>Modo</th>
+          <th onclick="sortBy('nota')">Nota <span class="material-symbols-rounded sort-icon" id="sort-nota">unfold_more</span></th>
+          <th onclick="sortBy('correctas')">Correctas <span class="material-symbols-rounded sort-icon" id="sort-correctas">unfold_more</span></th>
+          <th onclick="sortBy('falladas')">Falladas <span class="material-symbols-rounded sort-icon" id="sort-falladas">unfold_more</span></th>
+          <th>Blanco</th>
+          <th onclick="sortBy('tiempo')">Duración <span class="material-symbols-rounded sort-icon" id="sort-tiempo">unfold_more</span></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tabla-body"></tbody>
+    </table>
+    <div class="paginacion">
+      <span class="pag-info" id="pag-info"></span>
+      <div class="pag-btns" id="pag-btns"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ── Datos ──
+const TESTS = [
+  { id:1,  fecha:'2025-06-12', oposicion:'Cuerpo Administrativo', tema:'Constitución Española', modo:'Cronómetro', nota:9.5, correctas:19, falladas:1, blanco:0, tiempo:'09:42' },
+  { id:2,  fecha:'2025-06-10', oposicion:'Cuerpo Administrativo', tema:'Derechos Fundamentales', modo:'Libre', nota:8.0, correctas:16, falladas:3, blanco:1, tiempo:'18:15' },
+  { id:3,  fecha:'2025-06-08', oposicion:'Cuerpo Administrativo', tema:'La Corona y el Legislativo', modo:'Cronómetro', nota:7.5, correctas:15, falladas:5, blanco:0, tiempo:'14:30' },
+  { id:4,  fecha:'2025-06-05', oposicion:'Auxiliar Administrativo', tema:'Procedimiento Administrativo', modo:'Libre', nota:9.0, correctas:18, falladas:2, blanco:0, tiempo:'12:10' },
+  { id:5,  fecha:'2025-06-03', oposicion:'Cuerpo Administrativo', tema:'Constitución Española', modo:'Cronómetro', nota:6.5, correctas:13, falladas:6, blanco:1, tiempo:'22:44' },
+  { id:6,  fecha:'2025-05-30', oposicion:'Hacienda', tema:'Presupuestos Generales', modo:'Libre', nota:8.5, correctas:17, falladas:3, blanco:0, tiempo:'16:05' },
+  { id:7,  fecha:'2025-05-28', oposicion:'Cuerpo Administrativo', tema:'Poder Judicial', modo:'Cronómetro', nota:5.0, correctas:10, falladas:9, blanco:1, tiempo:'25:30' },
+  { id:8,  fecha:'2025-05-25', oposicion:'Auxiliar Administrativo', tema:'Acto Administrativo', modo:'Libre', nota:9.8, correctas:20, falladas:0, blanco:0, tiempo:'08:55' },
+  { id:9,  fecha:'2025-05-22', oposicion:'Hacienda', tema:'IRPF', modo:'Cronómetro', nota:7.0, correctas:14, falladas:5, blanco:1, tiempo:'19:20' },
+  { id:10, fecha:'2025-05-20', oposicion:'Cuerpo Administrativo', tema:'Derechos Fundamentales', modo:'Libre', nota:8.0, correctas:16, falladas:4, blanco:0, tiempo:'17:40' },
+  { id:11, fecha:'2025-05-18', oposicion:'Cuerpo Administrativo', tema:'Constitución Española', modo:'Cronómetro', nota:9.0, correctas:18, falladas:2, blanco:0, tiempo:'11:15' },
+  { id:12, fecha:'2025-05-15', oposicion:'Hacienda', tema:'IVA', modo:'Libre', nota:6.0, correctas:12, falladas:7, blanco:1, tiempo:'23:05' },
+  { id:13, fecha:'2025-05-12', oposicion:'Auxiliar Administrativo', tema:'Recursos Administrativos', modo:'Cronómetro', nota:8.5, correctas:17, falladas:2, blanco:1, tiempo:'13:50' },
+  { id:14, fecha:'2025-05-10', oposicion:'Cuerpo Administrativo', tema:'Organización del Estado', modo:'Libre', nota:7.5, correctas:15, falladas:5, blanco:0, tiempo:'20:30' },
+  { id:15, fecha:'2025-05-07', oposicion:'Hacienda', tema:'Presupuestos Generales', modo:'Cronómetro', nota:4.5, correctas:9,  falladas:10, blanco:1, tiempo:'28:10' },
+  { id:16, fecha:'2025-05-04', oposicion:'Cuerpo Administrativo', tema:'Constitución Española', modo:'Libre', nota:8.0, correctas:16, falladas:3, blanco:1, tiempo:'16:20' },
+  { id:17, fecha:'2025-05-01', oposicion:'Auxiliar Administrativo', tema:'Procedimiento Administrativo', modo:'Cronómetro', nota:9.5, correctas:19, falladas:1, blanco:0, tiempo:'10:05' },
+  { id:18, fecha:'2025-04-28', oposicion:'Cuerpo Administrativo', tema:'Derechos Fundamentales', modo:'Libre', nota:7.0, correctas:14, falladas:6, blanco:0, tiempo:'21:40' },
+  { id:19, fecha:'2025-04-25', oposicion:'Hacienda', tema:'IRPF', modo:'Cronómetro', nota:8.5, correctas:17, falladas:3, blanco:0, tiempo:'14:55' },
+  { id:20, fecha:'2025-04-22', oposicion:'Cuerpo Administrativo', tema:'Poder Judicial', modo:'Libre', nota:6.5, correctas:13, falladas:7, blanco:0, tiempo:'24:10' },
+];
+
+const POR_PAG = 10;
+let paginaActual = 1;
+let sortCol = 'fecha';
+let sortDir = 'desc';
+let filtrados = [...TESTS];
+
+function filtrarYRender() {
+  const q   = document.getElementById('search-input').value.toLowerCase();
+  const ops = document.getElementById('filter-oposicion').value;
+  const nota = document.getElementById('filter-nota').value;
+  const orden = document.getElementById('filter-orden').value;
+
+  filtrados = TESTS.filter(t =>
+    (!q    || t.oposicion.toLowerCase().includes(q) || t.tema.toLowerCase().includes(q)) &&
+    (!ops  || t.oposicion === ops) &&
+    (!nota || (nota === 'aprobado' ? t.nota >= 5 : nota === 'notable' ? t.nota >= 7 : t.nota < 5))
+  );
+
+  // Orden del select
+  filtrados.sort((a, b) => {
+    if (orden === 'fecha-desc')  return b.fecha.localeCompare(a.fecha);
+    if (orden === 'fecha-asc')   return a.fecha.localeCompare(b.fecha);
+    if (orden === 'nota-desc')   return b.nota - a.nota;
+    if (orden === 'nota-asc')    return a.nota - b.nota;
+    return 0;
+  });
+
+  paginaActual = 1;
+  document.getElementById('count').textContent = filtrados.length;
+  renderTabla();
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'desc'; }
+  // Actualizar iconos
+  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  const th = document.querySelector(`[onclick="sortBy('${col}')"]`);
+  if (th) th.classList.add('sorted');
+  document.querySelectorAll('.sort-icon').forEach(i => i.textContent = 'unfold_more');
+  const icon = document.getElementById('sort-' + col);
+  if (icon) icon.textContent = sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward';
+
+  filtrados.sort((a, b) => {
+    let va = a[col], vb = b[col];
+    if (col === 'fecha') return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    if (col === 'tiempo') {
+      const toSec = t => { const [m,s] = t.split(':').map(Number); return m*60+s; };
+      va = toSec(va); vb = toSec(vb);
+    }
+    return sortDir === 'asc' ? va - vb : vb - va;
+  });
+  renderTabla();
+}
+
+function notaClass(n) { return n >= 7 ? 'nota-ok' : n >= 5 ? 'nota-mid' : 'nota-bad'; }
+
+function formatFecha(f) {
+  const [y,m,d] = f.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function renderTabla() {
+  const body  = document.getElementById('tabla-body');
+  const total = filtrados.length;
+  const desde = (paginaActual - 1) * POR_PAG;
+  const hasta = Math.min(desde + POR_PAG, total);
+  const pagina = filtrados.slice(desde, hasta);
+
+  body.innerHTML = '';
+
+  if (pagina.length === 0) {
+    body.innerHTML = '<tr class="empty-row"><td colspan="10">No hay tests que coincidan con los filtros seleccionados.</td></tr>';
+  } else {
+    pagina.forEach(t => {
+      const tr = document.createElement('tr');
+      tr.onclick = () => window.location.href = 'resultados.html';
+      tr.innerHTML = `
+        <td class="td-fecha">${formatFecha(t.fecha)}</td>
+        <td class="td-scope">${t.oposicion}</td>
+        <td class="td-tema">${t.tema}</td>
+        <td class="td-modo">${t.modo}</td>
+        <td><span class="nota-badge ${notaClass(t.nota)}">${t.nota.toFixed(1)}</span></td>
+        <td class="td-correctas">${t.correctas}</td>
+        <td class="td-falladas">${t.falladas}</td>
+        <td style="opacity:0.55">${t.blanco}</td>
+        <td class="td-tiempo">${t.tiempo}</td>
+        <td class="td-acciones"><button class="btn-ver" onclick="event.stopPropagation();window.location.href='resultados.html'">Ver</button></td>`;
+      body.appendChild(tr);
+    });
+  }
+
+  // Paginación
+  document.getElementById('pag-info').textContent =
+    total === 0 ? '' : `Mostrando ${desde+1}–${hasta} de ${total}`;
+
+  const totalPags = Math.ceil(total / POR_PAG);
+  const btns = document.getElementById('pag-btns');
+  btns.innerHTML = '';
+
+  const prev = document.createElement('button');
+  prev.className = 'pag-btn';
+  prev.textContent = '←';
+  prev.disabled = paginaActual === 1;
+  prev.onclick = () => { paginaActual--; renderTabla(); };
+  btns.appendChild(prev);
+
+  for (let i = 1; i <= totalPags; i++) {
+    if (totalPags > 7 && i > 2 && i < totalPags - 1 && Math.abs(i - paginaActual) > 1) {
+      if (i === 3 || i === totalPags - 2) {
+        const dots = document.createElement('button');
+        dots.className = 'pag-btn';
+        dots.textContent = '…';
+        dots.disabled = true;
+        btns.appendChild(dots);
+      }
+      continue;
+    }
+    const b = document.createElement('button');
+    b.className = `pag-btn ${i === paginaActual ? 'active':''}`;
+    b.textContent = i;
+    b.onclick = () => { paginaActual = i; renderTabla(); };
+    btns.appendChild(b);
+  }
+
+  const next = document.createElement('button');
+  next.className = 'pag-btn';
+  next.textContent = '→';
+  next.disabled = paginaActual === totalPags || totalPags === 0;
+  next.onclick = () => { paginaActual++; renderTabla(); };
+  btns.appendChild(next);
+}
+
+// Init
+filtrarYRender();
+</script>
+</body>
+</html>
