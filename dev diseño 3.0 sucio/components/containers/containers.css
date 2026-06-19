@@ -1,0 +1,6 @@
+/*** CONTENEDORES ***/
+.container {
+  border-radius: var(--br-big);
+  background-color: var(--color-bg);
+  box-shadow: var(--box-shadow);
+}

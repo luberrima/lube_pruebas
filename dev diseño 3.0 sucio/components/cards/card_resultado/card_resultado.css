@@ -1,0 +1,26 @@
+.card-resultado { width: 280px; }
+.card-resultado .resultado-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.card-resultado .resultado-titulo {
+  font-family: var(--font-titles);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+  opacity: 0.7;
+}
+.card-resultado .resultado-nota {
+  font-family: var(--font-h1);
+  font-size: 2rem;
+  color: var(--color-main-dark);
+}
+.card-resultado .resultado-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+  text-align: center;
+}

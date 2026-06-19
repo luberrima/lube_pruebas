@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+/* ══════════════════════════════
+   ROOT
+══════════════════════════════ */
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 16px 0 rgba(0,0,0,0.10);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+
+  /* Sidebar */
+  --sidebar-w: 60px;
+  --sidebar-expanded: 200px;
+  --sidebar-gap: 84px; /* margen izq del main = sidebar + 24px */
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-text);
+  color: var(--color-black);
+  min-height: 100vh;
+  background: linear-gradient(135deg, #cde8ed 0%, #ddeef5 40%, #f9ddd4 100%);
+  display: flex;
+}
+
+/* ══════════════════════════════
+   SIDEBAR — DESKTOP
+══════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 12px; bottom: 12px; left: 12px;
+  width: var(--sidebar-w);
+  background: var(--color-white);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  z-index: 100;
+  transition: width 0.18s ease;
+  overflow: hidden;
+}
+.sidebar:hover { width: var(--sidebar-expanded); }
+
+.sidebar-logo {
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 28px;
+  width: var(--sidebar-w);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar nav { width: 100%; flex: 1; }
+.sidebar ul { list-style: none; }
+.sidebar li a {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 19px;
+  gap: 12px;
+  color: var(--color-main-dark);
+  text-decoration: none;
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+.sidebar li a:hover,
+.sidebar li.active a { background: #e8f4f5; }
+.sidebar li.active a { font-weight: 600; }
+
+.material-symbols-rounded { font-size: 22px; flex-shrink: 0; }
+
+.nav-text {
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  pointer-events: none;
+}
+.sidebar:hover .nav-text { opacity: 1; }
+
+.sidebar-bottom { margin-top: auto; width: 100%; }
+
+/* ══════════════════════════════
+   MAIN — DESKTOP
+══════════════════════════════ */
+main {
+  margin-left: var(--sidebar-gap);
+  flex: 1;
+  padding: 40px 36px 40px 20px;
+}
+
+/* ── Encabezado ── */
+.page-label {
+  font-family: var(--font-titles);
+  font-size: 1rem;
+  color: var(--color-main);
+  margin-bottom: 4px;
+}
+.page-title {
+  font-family: var(--font-h1);
+  font-size: 2rem;
+  color: var(--color-main-dark);
+  margin-bottom: 28px;
+  line-height: 1.2;
+}
+
+/* ── Grid principal ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 20px;
+  align-items: start;
+}
+.col-left { display: flex; flex-direction: column; gap: 20px; }
+/* .col-right { } */
+
+/* ── Cards ── */
+.card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 24px 28px;
+}
+.card-title {
+  font-family: var(--font-titles);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 12px;
+}
+
+/* ── Filas de lista ── */
+.list-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e8f0f2;
+  gap: 8px;
+}
+.list-row:last-of-type { border-bottom: none; }
+.row-name {
+  flex: 1;
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  color: var(--color-main-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.row-pct {
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  color: var(--color-main-dark);
+  width: 38px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.row-link {
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  color: var(--color-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Botones ── */
+.btn {
+  padding: 10px 22px;
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  border-radius: var(--br-small);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-accent { background: var(--color-secondary); color: var(--color-white); }
+.btn-accent:hover { opacity: 0.88; }
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+/* ── Chart card ── */
+.chart-card {
+  display: flex;
+  flex-direction: column;
+}
+.chart-legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-titles);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.chart-wrap { position: relative; height: 280px; }
+.chart-footer { display: flex; justify-content: flex-end; margin-top: 14px; }
+
+/* ── Hacer test ── */
+.hacer-test-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+  padding-bottom: 20px;
+}
+.btn-hacer-test {
+  background: var(--color-main-dark);
+  color: var(--color-white);
+  font-family: var(--font-h1);
+  font-size: 0.9rem;
+  padding: 16px 52px;
+  border-radius: var(--br-small);
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.15s ease;
+}
+.btn-hacer-test:hover { background: var(--color-main); }
+
+/* ══════════════════════════════
+   MÓVIL (< 768px)
+══════════════════════════════ */
+@media (max-width: 767px) {
+
+  /* Sidebar → bottom bar */
+  .sidebar {
+    top: auto;
+    left: 12px; right: 12px; bottom: 12px;
+    width: auto !important;
+    height: 62px;
+    flex-direction: row;
+    border-radius: 20px;
+    padding: 0 4px;
+    justify-content: center;
+  }
+  .sidebar-logo { display: none; }
+  .sidebar nav { flex: 1; }
+  .sidebar ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 62px;
+  }
+  .sidebar li { display: flex; }
+  .sidebar li a {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 12px;
+  }
+  .nav-text { display: none !important; }
+  .sidebar-bottom { display: none; }
+  .material-symbols-rounded { font-size: 26px; }
+
+  /* Main */
+  main {
+    margin-left: 0;
+    margin-bottom: 86px;
+    padding: 24px 16px;
+  }
+
+  /* Tipografía */
+  .page-label { font-size: 0.82rem; }
+  .page-title { font-size: 1.35rem; margin-bottom: 20px; }
+
+  /* Grid → columna única */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Cards */
+  .card { padding: 18px 16px; }
+  .card-title { font-size: 0.9rem; }
+
+  /* Botones full-width en móvil */
+  .card-footer { justify-content: stretch; }
+  .card-footer .btn { width: 100%; text-align: center; }
+
+  /* Chart más bajo en móvil */
+  .chart-wrap { height: 200px; }
+  .chart-footer { justify-content: stretch; }
+  .chart-footer .btn { width: 100%; text-align: center; }
+
+  /* Hacer test */
+  .hacer-test-wrap { padding: 0 0 8px; }
+  .btn-hacer-test { width: 100%; text-align: center; padding: 16px 0; font-size: 0.82rem; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li class="active"><a href="#"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li><a href="#"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<main>
+  <p class="page-label">Dashboard Alumno</p>
+  <h1 class="page-title">¡Hola, Nombre Apellido!</h1>
+
+  <div class="dashboard-grid">
+
+    <div class="col-left">
+      <!-- Bloques -->
+      <div class="card">
+        <div class="card-title">Bloques</div>
+        <div class="list-row"><span class="row-name">Nombre de la Oposición</span><span class="row-pct">48%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre de la Oposición</span><span class="row-pct">62%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre de la Oposición</span><span class="row-pct">31%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre de la Oposición</span><span class="row-pct">78%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre de la Oposición</span><span class="row-pct">55%</span><span class="row-link">Ver</span></div>
+        <div class="card-footer"><button class="btn btn-accent">Ver todas las Oposiciones</button></div>
+      </div>
+
+      <!-- Mis Temas -->
+      <div class="card">
+        <div class="card-title">Mis Temas</div>
+        <div class="list-row"><span class="row-name">Nombre del tema</span><span class="row-pct">48%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre del tema</span><span class="row-pct">70%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre del tema</span><span class="row-pct">22%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre del tema</span><span class="row-pct">91%</span><span class="row-link">Ver</span></div>
+        <div class="list-row"><span class="row-name">Nombre del tema</span><span class="row-pct">48%</span><span class="row-link">Ver</span></div>
+        <div class="card-footer"><button class="btn btn-accent">Ver todos los temas</button></div>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="col-right">
+      <div class="card chart-card">
+        <div class="card-title">Estadísticas</div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--color-main)"></div>Aciertos</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--color-secondary)"></div>Fallos</div>
+        </div>
+        <div class="chart-wrap"><canvas id="statsChart"></canvas></div>
+        <div class="chart-footer"><button class="btn btn-accent">Ver mis Estadísticas</button></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hacer-test-wrap">
+    <button class="btn-hacer-test">Hacer nuevo test</button>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('statsChart').getContext('2d'), {
+  type: 'line',
+  data: {
+    labels: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    datasets: [
+      { label:'Aciertos', data:[55,62,58,70,65,80,75,88,72,91,85,93],
+        borderColor:'#008e97', pointBackgroundColor:'#008e97',
+        tension:0.45, fill:false, borderWidth:2.5, pointRadius:4 },
+      { label:'Fallos', data:[45,38,50,30,40,25,38,20,42,15,28,18],
+        borderColor:'#fc4c02', pointBackgroundColor:'#fc4c02',
+        tension:0.45, fill:false, borderWidth:2.5, pointRadius:4 }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    interaction:{ mode:'index', intersect:false },
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ backgroundColor:'#002634',
+        titleFont:{family:'IBM Plex Mono',size:11},
+        bodyFont:{family:'IBM Plex Mono',size:11},
+        padding:10, cornerRadius:8 }
+    },
+    scales:{
+      x:{ grid:{color:'rgba(0,0,0,0.05)'}, ticks:{font:{family:'IBM Plex Mono',size:10},color:'#085d7c'} },
+      y:{ min:0, max:100, grid:{color:'rgba(0,0,0,0.05)'},
+          ticks:{font:{family:'IBM Plex Mono',size:10},color:'#085d7c',callback:v=>v+'%'} }
+    }
+  }
+});
+</script>
+</body>
+</html>

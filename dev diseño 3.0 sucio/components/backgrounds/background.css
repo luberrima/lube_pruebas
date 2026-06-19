@@ -1,0 +1,25 @@
+/* Estructura
+selector {
+  background: color imagen repetición posición /tamaño fijación extensión origen;
+}
+
+/* Ejemplo */
+/*p {
+  background: red url("imagen.jpg") repeat-x top right /50% fixed padding-box border-box;
+} */
+
+.bg-gradient-1 {
+  background: url("./img/WebP/fondo-1.webp") top left 100%;
+}
+
+.bg-gradient-2 {
+  background: url("./img/WebP/fondo-2.webp") top left 100%;
+}
+
+.bg-gradient-3 {
+  background: url("./img/WebP/fondo-3.webp") top left 100%;
+}
+
+.bg-gradient-4 {
+  background: url("./img/WebP/fondo-4.webp") top left 100%;
+}

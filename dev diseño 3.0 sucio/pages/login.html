@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Acceso — opositivo.es</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --color-bg: #fefcfb;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 2px 4px 32px 0 rgba(0,0,0,0.13);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5c4b0 0%, #f0d0c0 25%, #c8dde8 70%, #a0c8d8 100%);
+  font-family: var(--font-text);
+  padding: 1.5rem;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--color-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 48px 52px 44px;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ── Título ── */
+.card-title {
+  font-family: var(--font-h1);
+  font-size: 1.9rem;
+  color: var(--color-main-dark);
+  margin-bottom: 6px;
+  line-height: 1.15;
+}
+.card-subtitle {
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+  margin-bottom: 28px;
+}
+
+/* Separador */
+.sep {
+  border: none;
+  border-top: 1.5px solid var(--color-main-dark);
+  opacity: 0.15;
+  margin-bottom: 28px;
+  width: 140px;
+}
+
+/* ── Formulario ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.form-label {
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+}
+.form-input {
+  border: 1.5px solid var(--color-main);
+  border-radius: 10px;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-text);
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-main-dark);
+  box-shadow: 0 0 0 3px rgba(0,142,151,0.12);
+}
+
+/* Enlace olvido contraseña */
+.link-forgot {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: var(--color-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  display: inline-block;
+  transition: opacity 0.15s;
+}
+.link-forgot:hover { opacity: 0.7; }
+
+/* ── Botón principal ── */
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background: var(--color-secondary);
+  color: var(--color-white);
+  font-family: var(--font-titles);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  letter-spacing: 0.03em;
+  margin-bottom: 18px;
+}
+.btn-submit:hover { background: var(--color-secondary-dark); transform: translateY(-1px); }
+.btn-submit:active { transform: translateY(0); }
+
+/* ── Link inferior ── */
+.link-bottom {
+  text-align: center;
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+}
+.link-bottom a {
+  color: var(--color-main-dark);
+  font-weight: 700;
+  opacity: 1;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.link-bottom a:hover { color: var(--color-main); }
+
+/* ── Mensajes de error ── */
+.error-msg {
+  display: none;
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: #c11717;
+  margin-top: 4px;
+}
+.form-input.error { border-color: #c11717; }
+.form-input.error:focus { box-shadow: 0 0 0 3px rgba(193,23,23,0.1); }
+
+/* ── Vistas ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ══ MÓVIL ══ */
+@media (max-width: 767px) {
+  body { align-items: flex-end; padding: 0; }
+  .card {
+    border-radius: 20px 0 0 0;
+    padding: 36px 24px 40px;
+    max-width: 100%;
+  }
+  .card-title { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ══ LOGIN ══ -->
+  <div class="view active" id="view-login">
+    <h1 class="card-title">Inicio de Sesión</h1>
+    <p class="card-subtitle">Inicia sesión para acceder a tu cuenta</p>
+    <hr class="sep"/>
+
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input class="form-input" type="email" id="login-email" placeholder="" autocomplete="email"/>
+      <span class="error-msg" id="login-email-err">Introduce un correo válido.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input class="form-input" type="password" id="login-pass" placeholder="" autocomplete="current-password"/>
+      <span class="error-msg" id="login-pass-err">La contraseña no puede estar vacía.</span>
+    </div>
+
+    <button class="link-forgot" onclick="switchView('view-forgot')">¿Has olvidado tu contraseña?</button>
+
+    <button class="btn-submit" onclick="submitLogin()">Acceder</button>
+
+    <p class="link-bottom">¿No tienes cuenta? <a onclick="switchView('view-registro')">Regístrate</a></p>
+  </div>
+
+  <!-- ══ REGISTRO ══ -->
+  <div class="view" id="view-registro">
+    <h1 class="card-title">Registro</h1>
+    <p class="card-subtitle">Regístrate para acceder a los contenidos</p>
+    <hr class="sep"/>
+
+    <div class="form-group">
+      <label class="form-label">Nombre completo</label>
+      <input class="form-input" type="text" id="reg-nombre" placeholder="" autocomplete="name"/>
+      <span class="error-msg" id="reg-nombre-err">Introduce tu nombre completo.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input class="form-input" type="email" id="reg-email" placeholder="" autocomplete="email"/>
+      <span class="error-msg" id="reg-email-err">Introduce un correo válido.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input class="form-input" type="password" id="reg-pass" placeholder="" autocomplete="new-password"/>
+      <span class="error-msg" id="reg-pass-err">La contraseña debe tener al menos 8 caracteres.</span>
+    </div>
+
+    <div class="form-group" style="margin-bottom:24px">
+      <label class="form-label">Confirmar contraseña</label>
+      <input class="form-input" type="password" id="reg-pass2" placeholder="" autocomplete="new-password"/>
+      <span class="error-msg" id="reg-pass2-err">Las contraseñas no coinciden.</span>
+    </div>
+
+    <button class="btn-submit" onclick="submitRegistro()">Crear cuenta</button>
+
+    <p class="link-bottom">¿Ya tienes cuenta? <a onclick="switchView('view-login')">Inicia Sesión</a></p>
+  </div>
+
+  <!-- ══ RECUPERAR CONTRASEÑA ══ -->
+  <div class="view" id="view-forgot">
+    <h1 class="card-title">Recuperar contraseña</h1>
+    <p class="card-subtitle">Te enviaremos un enlace para restablecer tu contraseña</p>
+    <hr class="sep"/>
+
+    <div class="form-group" style="margin-bottom:24px">
+      <label class="form-label">Correo electrónico</label>
+      <input class="form-input" type="email" id="forgot-email" placeholder="" autocomplete="email"/>
+      <span class="error-msg" id="forgot-email-err">Introduce un correo válido.</span>
+    </div>
+
+    <button class="btn-submit" onclick="submitForgot()">Enviar enlace</button>
+
+    <p class="link-bottom"><a onclick="switchView('view-login')">← Volver al inicio de sesión</a></p>
+  </div>
+
+  <!-- ══ CONFIRMACIÓN FORGOT ══ -->
+  <div class="view" id="view-forgot-ok">
+    <div style="text-align:center;padding:20px 0">
+      <div style="font-size:48px;margin-bottom:16px">📬</div>
+      <h1 class="card-title" style="font-size:1.4rem;text-align:center;margin-bottom:8px">Revisa tu correo</h1>
+      <p class="card-subtitle" style="text-align:center;opacity:0.7;max-width:320px;margin:0 auto 28px">
+        Si existe una cuenta con ese correo, recibirás un enlace para restablecer tu contraseña en los próximos minutos.
+      </p>
+      <button class="btn-submit" onclick="switchView('view-login')">Volver al inicio de sesión</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // Limpiar errores al cambiar de vista
+  document.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
+  document.querySelectorAll('.error-msg').forEach(e => e.style.display = 'none');
+}
+
+function showError(inputId, errId) {
+  document.getElementById(inputId).classList.add('error');
+  document.getElementById(errId).style.display = 'block';
+}
+function clearError(inputId, errId) {
+  document.getElementById(inputId).classList.remove('error');
+  document.getElementById(errId).style.display = 'none';
+}
+
+function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+function submitLogin() {
+  let ok = true;
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+
+  if (!isValidEmail(email)) { showError('login-email','login-email-err'); ok = false; }
+  else clearError('login-email','login-email-err');
+
+  if (!pass) { showError('login-pass','login-pass-err'); ok = false; }
+  else clearError('login-pass','login-pass-err');
+
+  if (ok) window.location.href = 'dashboard.html';
+}
+
+function submitRegistro() {
+  let ok = true;
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  const pass   = document.getElementById('reg-pass').value;
+  const pass2  = document.getElementById('reg-pass2').value;
+
+  if (!nombre) { showError('reg-nombre','reg-nombre-err'); ok = false; }
+  else clearError('reg-nombre','reg-nombre-err');
+
+  if (!isValidEmail(email)) { showError('reg-email','reg-email-err'); ok = false; }
+  else clearError('reg-email','reg-email-err');
+
+  if (pass.length < 8) { showError('reg-pass','reg-pass-err'); ok = false; }
+  else clearError('reg-pass','reg-pass-err');
+
+  if (pass !== pass2 || !pass2) { showError('reg-pass2','reg-pass2-err'); ok = false; }
+  else clearError('reg-pass2','reg-pass2-err');
+
+  if (ok) window.location.href = 'dashboard.html';
+}
+
+function submitForgot() {
+  const email = document.getElementById('forgot-email').value.trim();
+  if (!isValidEmail(email)) { showError('forgot-email','forgot-email-err'); return; }
+  clearError('forgot-email','forgot-email-err');
+  switchView('view-forgot-ok');
+}
+
+// Enter para enviar
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.view.active').id;
+  if (active === 'view-login')    submitLogin();
+  if (active === 'view-registro') submitRegistro();
+  if (active === 'view-forgot')   submitForgot();
+});
+</script>
+</body>
+</html>

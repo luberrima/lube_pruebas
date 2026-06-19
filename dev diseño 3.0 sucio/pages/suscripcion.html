@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Mi Suscripción</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-error: #c11717;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --color-bg: #fefcfb;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 20px 0 rgba(0,0,0,0.10);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+  --sidebar-w: 60px;
+  --sidebar-gap: 84px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { min-height:100vh; background:linear-gradient(135deg,#cde8ed 0%,#ddeef5 40%,#f9ddd4 100%); font-family:var(--font-text); color:var(--color-black); display:flex; overflow-x:hidden; }
+
+/* ══ SIDEBAR ══ */
+.sidebar { position:fixed; top:12px; bottom:12px; left:12px; width:var(--sidebar-w); background:var(--color-white); border-radius:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; padding:16px 0; z-index:100; transition:width 0.18s ease; overflow:hidden; }
+.sidebar:hover { width:200px; }
+.sidebar-logo { font-family:var(--font-titles); font-size:0.65rem; font-weight:600; color:var(--color-main); margin-bottom:28px; width:var(--sidebar-w); text-align:center; flex-shrink:0; }
+.sidebar nav { width:100%; flex:1; }
+.sidebar ul { list-style:none; }
+.sidebar li a { display:flex; align-items:center; height:48px; padding:0 19px; gap:12px; color:var(--color-main-dark); text-decoration:none; transition:background 0.1s; white-space:nowrap; }
+.sidebar li a:hover, .sidebar li.active a { background:#e8f4f5; }
+.sidebar li.active a { font-weight:600; }
+.material-symbols-rounded { font-size:22px; flex-shrink:0; }
+.nav-text { font-family:var(--font-titles); font-size:0.85rem; opacity:0; transition:opacity 0.12s ease; }
+.sidebar:hover .nav-text { opacity:1; }
+.sidebar-bottom { margin-top:auto; width:100%; }
+
+/* ══ MAIN ══ */
+main { margin-left:var(--sidebar-gap); flex:1; padding:36px 36px 60px 20px; min-width:0; max-width:calc(860px + var(--sidebar-gap) + 36px); }
+
+/* Breadcrumb */
+.breadcrumb { display:flex; align-items:center; gap:6px; font-family:var(--font-titles); font-size:0.72rem; color:var(--color-main-dark); opacity:0.6; margin-bottom:16px; flex-wrap:wrap; }
+.breadcrumb a { color:var(--color-main); text-decoration:none; opacity:1; }
+.breadcrumb a:hover { text-decoration:underline; }
+.breadcrumb .material-symbols-rounded { font-size:14px; }
+.breadcrumb .current { color:var(--color-main-dark); font-weight:600; opacity:1; }
+
+/* Encabezado */
+.page-label { font-family:var(--font-titles); font-size:0.9rem; color:var(--color-main); margin-bottom:4px; }
+.page-title { font-family:var(--font-h1); font-size:1.8rem; color:var(--color-main-dark); margin-bottom:28px; line-height:1.2; }
+
+/* ══ LAYOUT ══ */
+.main-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+.col-full { grid-column:1/-1; }
+
+/* ══ CARDS ══ */
+.card { background:var(--color-white); border-radius:var(--br-big); box-shadow:var(--shadow); padding:24px 26px; }
+.card-title { font-family:var(--font-titles); font-size:0.78rem; font-weight:600; color:var(--color-main); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:18px; }
+
+/* ══ PLAN ACTIVO ══ */
+.plan-activo-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 28px 30px;
+  border-top: 4px solid var(--color-secondary);
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+.plan-activo-left {}
+.plan-activo-label { font-family:var(--font-titles); font-size:0.72rem; color:var(--color-main); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:6px; }
+.plan-activo-nombre { font-family:var(--font-h1); font-size:1.6rem; color:var(--color-main-dark); margin-bottom:4px; }
+.plan-activo-precio { font-family:var(--font-titles); font-size:0.9rem; color:var(--color-main-dark); opacity:0.6; margin-bottom:16px; }
+.plan-activo-features { display:flex; flex-direction:column; gap:7px; }
+.feat-row { display:flex; align-items:center; gap:8px; font-family:var(--font-text); font-size:0.82rem; color:var(--color-main-dark); }
+.feat-row .material-symbols-rounded { font-size:17px; color:var(--color-success); font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; flex-shrink:0; }
+
+.plan-activo-right { display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+.plan-activo-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 16px; border-radius:99px;
+  background:#d4f0db; color:var(--color-success);
+  font-family:var(--font-titles); font-size:0.75rem; font-weight:700;
+}
+.plan-activo-badge .material-symbols-rounded { font-size:16px; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; }
+.plan-renovacion { font-family:var(--font-titles); font-size:0.72rem; color:var(--color-main-dark); opacity:0.55; text-align:right; }
+
+/* ══ BOTONES ══ */
+.btn { padding:10px 20px; font-family:var(--font-titles); font-size:0.82rem; font-weight:600; border:none; border-radius:var(--br-small); cursor:pointer; transition:all 0.15s ease; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; text-decoration:none; }
+.btn .material-symbols-rounded { font-size:17px; }
+.btn-accent  { background:var(--color-secondary); color:var(--color-white); }
+.btn-accent:hover  { background:var(--color-secondary-dark); transform:translateY(-1px); }
+.btn-primary { background:var(--color-main-dark); color:var(--color-white); }
+.btn-primary:hover { background:var(--color-main); transform:translateY(-1px); }
+.btn-ghost { background:var(--color-white); color:var(--color-main-dark); border:1px solid #c8dde2; }
+.btn-ghost:hover { border-color:var(--color-main); color:var(--color-main); }
+.btn-danger { background:transparent; color:var(--color-error); border:1px solid var(--color-error); }
+.btn-danger:hover { background:#fdf0f0; }
+.btn-full { width:100%; justify-content:center; }
+.btn-sm { padding:7px 14px; font-size:0.75rem; }
+
+/* ══ CAMBIAR PLAN ══ */
+.planes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.plan-card {
+  border-radius:var(--br-big);
+  border:2px solid #e0ecf0;
+  padding:18px 16px;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  cursor:pointer;
+  position:relative;
+}
+.plan-card:hover { border-color:var(--color-main); box-shadow:var(--shadow); }
+.plan-card.current { border-color:var(--color-secondary); background:#fff8f5; }
+.plan-card.current::before {
+  content:'Plan actual';
+  position:absolute;
+  top:-1px; right:14px;
+  background:var(--color-secondary);
+  color:var(--color-white);
+  font-family:var(--font-titles);
+  font-size:0.6rem;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:0 0 6px 6px;
+}
+.plan-nombre { font-family:var(--font-titles); font-size:0.9rem; font-weight:700; color:var(--color-main-dark); margin-bottom:4px; }
+.plan-precio-wrap { margin-bottom:14px; }
+.plan-precio { font-family:var(--font-h1); font-size:1.4rem; color:var(--color-main-dark); line-height:1; }
+.plan-precio-per { font-family:var(--font-titles); font-size:0.65rem; color:var(--color-main-dark); opacity:0.5; }
+.plan-feats { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.plan-feat { display:flex; align-items:center; gap:6px; font-family:var(--font-text); font-size:0.72rem; color:var(--color-main-dark); }
+.plan-feat .material-symbols-rounded { font-size:14px; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; flex-shrink:0; }
+.feat-si { color:var(--color-success); }
+.feat-no { color:#c8d8dc; }
+.plan-btn {
+  width:100%; padding:9px; font-family:var(--font-titles); font-size:0.75rem; font-weight:600;
+  border-radius:var(--br-small); border:none; cursor:pointer; transition:all 0.15s;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+}
+.plan-btn .material-symbols-rounded { font-size:14px; }
+.plan-btn.actual { background:#f0f4f6; color:#8a9faa; cursor:default; }
+.plan-btn.subir  { background:var(--color-secondary); color:var(--color-white); }
+.plan-btn.subir:hover { background:var(--color-secondary-dark); }
+.plan-btn.bajar  { background:transparent; color:var(--color-main-dark); border:1px solid #c8dde2; }
+.plan-btn.bajar:hover { border-color:var(--color-main); color:var(--color-main); }
+
+/* ══ INFO RENOVACIÓN ══ */
+.renov-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f0f6f8; gap:12px; flex-wrap:wrap; }
+.renov-row:last-child { border-bottom:none; }
+.renov-key { font-family:var(--font-titles); font-size:0.78rem; color:var(--color-main-dark); opacity:0.6; }
+.renov-val { font-family:var(--font-titles); font-size:0.78rem; font-weight:700; color:var(--color-main-dark); }
+.renov-val.ok  { color:var(--color-success); }
+.renov-val.warn { color:var(--color-secondary); }
+
+/* ══ FACTURAS ══ */
+.factura-row {
+  display:flex; align-items:center; gap:14px;
+  padding:12px 0; border-bottom:1px solid #f0f6f8;
+}
+.factura-row:last-child { border-bottom:none; }
+.factura-icon { width:36px; height:36px; border-radius:10px 0 10px 0; background:#e0f0f2; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.factura-icon .material-symbols-rounded { font-size:18px; color:var(--color-main-dark); }
+.factura-info { flex:1; min-width:0; }
+.factura-desc { font-family:var(--font-titles); font-size:0.78rem; font-weight:600; color:var(--color-main-dark); }
+.factura-fecha { font-family:var(--font-text); font-size:0.7rem; color:var(--color-main-dark); opacity:0.55; margin-top:2px; }
+.factura-importe { font-family:var(--font-titles); font-size:0.82rem; font-weight:700; color:var(--color-main-dark); flex-shrink:0; }
+.factura-dl { font-family:var(--font-titles); font-size:0.72rem; color:var(--color-secondary); text-decoration:underline; cursor:pointer; flex-shrink:0; }
+
+/* ══ MÉTODO DE PAGO ══ */
+.metodo-wrap { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.metodo-card-visual {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 16px; background:#f0f8fa; border-radius:var(--br-small);
+  flex:1;
+}
+.metodo-logo { font-family:var(--font-titles); font-size:0.82rem; font-weight:700; color:var(--color-main-dark); background:#e0ecf0; padding:4px 10px; border-radius:6px; }
+.metodo-num { font-family:var(--font-titles); font-size:0.82rem; color:var(--color-main-dark); letter-spacing:0.1em; }
+.metodo-exp { font-family:var(--font-titles); font-size:0.72rem; color:var(--color-main-dark); opacity:0.5; }
+
+/* ══ CANCELAR ══ */
+.cancelar-wrap { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.cancelar-info {}
+.cancelar-title { font-family:var(--font-titles); font-size:0.88rem; font-weight:600; color:var(--color-main-dark); margin-bottom:4px; }
+.cancelar-desc { font-family:var(--font-text); font-size:0.78rem; color:var(--color-main-dark); opacity:0.6; line-height:1.5; max-width:380px; }
+
+/* ══ MODAL ══ */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,38,52,0.5); z-index:500; display:flex; align-items:center; justify-content:center; padding:1.5rem; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal { background:var(--color-white); border-radius:var(--br-big); box-shadow:0 8px 40px rgba(0,0,0,0.2); padding:2.5rem 2rem 2rem; width:100%; max-width:420px; text-align:center; position:relative; transform:scale(0.95); transition:transform 0.2s; }
+.modal-overlay.open .modal { transform:scale(1); }
+.modal-close { position:absolute; top:14px; right:16px; background:none; border:none; cursor:pointer; color:var(--color-main-dark); opacity:0.4; font-family:var(--font-titles); font-size:1rem; transition:opacity 0.15s; padding:4px; }
+.modal-close:hover { opacity:1; }
+.modal-title { font-family:var(--font-h1); font-size:1.3rem; color:var(--color-main-dark); margin-bottom:0.75rem; }
+.modal-body { font-family:var(--font-titles); font-size:0.82rem; color:var(--color-black); opacity:0.65; line-height:1.6; margin-bottom:1.5rem; }
+.modal-actions { display:flex; flex-direction:column; gap:0.75rem; }
+
+/* ══ MÓVIL ══ */
+@media (max-width:767px) {
+  .sidebar { top:auto; left:12px; right:12px; bottom:12px; width:auto !important; height:62px; flex-direction:row; border-radius:20px; padding:0 4px; }
+  .sidebar-logo { display:none; }
+  .sidebar nav { flex:1; }
+  .sidebar ul { display:flex; flex-direction:row; justify-content:space-around; align-items:center; height:62px; }
+  .sidebar li { display:flex; }
+  .sidebar li a { width:50px; height:50px; padding:0; justify-content:center; border-radius:12px; }
+  .nav-text { display:none !important; }
+  .sidebar-bottom { display:none; }
+  main { margin-left:0; margin-bottom:86px; padding:20px 14px 40px; width:100%; max-width:100%; overflow-x:hidden; }
+  .page-title { font-size:1.35rem; margin-bottom:20px; }
+  .main-grid { grid-template-columns:1fr; }
+  .col-full { grid-column:1; }
+  .plan-activo-card { grid-template-columns:1fr; }
+  .plan-activo-right { align-items:flex-start; }
+  .plan-renovacion { text-align:left; }
+  .planes-grid { grid-template-columns:1fr; }
+  .card { padding:18px 14px; }
+  .btn-full { font-size:0.82rem; }
+  .cancelar-wrap { flex-direction:column; align-items:flex-start; }
+  .modal-overlay { align-items:flex-end; padding:0; }
+  .modal { border-radius:20px 0 0 0; max-width:100%; padding:2rem 1.25rem 2.5rem; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li><a href="mis-oposiciones.html"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li><a href="estadisticas.html"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li class="active"><a href="perfil.html"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<main>
+
+  <div class="breadcrumb">
+    <a href="perfil.html">Mi perfil</a>
+    <span class="material-symbols-rounded">chevron_right</span>
+    <span class="current">Mi suscripción</span>
+  </div>
+
+  <p class="page-label">Área personal</p>
+  <h1 class="page-title">Mi Suscripción</h1>
+
+  <div class="main-grid">
+
+    <!-- Plan activo -->
+    <div class="plan-activo-card col-full">
+      <div class="plan-activo-left">
+        <div class="plan-activo-label">Tu plan actual</div>
+        <div class="plan-activo-nombre">Plan Premium</div>
+        <div class="plan-activo-precio">99 € / mes · Cuerpo Administrativo del Estado</div>
+        <div class="plan-activo-features">
+          <div class="feat-row"><span class="material-symbols-rounded">check_circle</span>Acceso ilimitado a todos los tests</div>
+          <div class="feat-row"><span class="material-symbols-rounded">check_circle</span>Vídeos explicativos por tema</div>
+          <div class="feat-row"><span class="material-symbols-rounded">check_circle</span>Supuestos prácticos completos</div>
+          <div class="feat-row"><span class="material-symbols-rounded">check_circle</span>Progreso guardado permanentemente</div>
+          <div class="feat-row"><span class="material-symbols-rounded">check_circle</span>Acompañamiento personalizado del preparador</div>
+        </div>
+      </div>
+      <div class="plan-activo-right">
+        <span class="plan-activo-badge">
+          <span class="material-symbols-rounded">check_circle</span>
+          Activo
+        </span>
+        <div class="plan-renovacion">Próxima renovación<br><strong>15 de enero de 2026</strong></div>
+      </div>
+    </div>
+
+    <!-- Cambiar de plan -->
+    <div class="card col-full">
+      <div class="card-title">Cambiar de plan</div>
+      <div class="planes-grid">
+
+        <div class="plan-card">
+          <div class="plan-nombre">Básico</div>
+          <div class="plan-precio-wrap">
+            <div class="plan-precio">49€</div>
+            <div class="plan-precio-per">/ mes</div>
+          </div>
+          <div class="plan-feats">
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Tests ilimitados</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Estadísticas</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-no">cancel</span>Vídeos</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-no">cancel</span>Supuestos</div>
+          </div>
+          <button class="plan-btn bajar" onclick="abrirModal('modal-cambiar', 'Básico', '49€/mes')">
+            <span class="material-symbols-rounded">arrow_downward</span>Cambiar a Básico
+          </button>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-nombre">Medio</div>
+          <div class="plan-precio-wrap">
+            <div class="plan-precio">79€</div>
+            <div class="plan-precio-per">/ mes</div>
+          </div>
+          <div class="plan-feats">
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Tests ilimitados</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Estadísticas</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Vídeos</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-no">cancel</span>Supuestos</div>
+          </div>
+          <button class="plan-btn bajar" onclick="abrirModal('modal-cambiar', 'Medio', '79€/mes')">
+            <span class="material-symbols-rounded">arrow_downward</span>Cambiar a Medio
+          </button>
+        </div>
+
+        <div class="plan-card current">
+          <div class="plan-nombre">Premium</div>
+          <div class="plan-precio-wrap">
+            <div class="plan-precio">99€</div>
+            <div class="plan-precio-per">/ mes</div>
+          </div>
+          <div class="plan-feats">
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Tests ilimitados</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Estadísticas</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Vídeos</div>
+            <div class="plan-feat"><span class="material-symbols-rounded feat-si">check_circle</span>Supuestos</div>
+          </div>
+          <button class="plan-btn actual" disabled>
+            <span class="material-symbols-rounded">check</span>Plan actual
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Info renovación -->
+    <div class="card">
+      <div class="card-title">Renovación y ciclo de pago</div>
+      <div class="renov-row"><span class="renov-key">Estado</span><span class="renov-val ok">Activo</span></div>
+      <div class="renov-row"><span class="renov-key">Inicio suscripción</span><span class="renov-val">15 ene 2025</span></div>
+      <div class="renov-row"><span class="renov-key">Próxima renovación</span><span class="renov-val">15 ene 2026</span></div>
+      <div class="renov-row"><span class="renov-key">Importe próximo</span><span class="renov-val">99,00 €</span></div>
+      <div class="renov-row"><span class="renov-key">Ciclo</span><span class="renov-val">Mensual</span></div>
+    </div>
+
+    <!-- Método de pago -->
+    <div class="card">
+      <div class="card-title">Método de pago</div>
+      <div class="metodo-wrap" style="margin-bottom:16px">
+        <div class="metodo-card-visual">
+          <span class="metodo-logo">VISA</span>
+          <div>
+            <div class="metodo-num">•••• •••• •••• 4242</div>
+            <div class="metodo-exp">Caduca 08/27</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-full" onclick="abrirModal('modal-pago')">
+        <span class="material-symbols-rounded">credit_card</span>
+        Cambiar método de pago
+      </button>
+    </div>
+
+    <!-- Facturas -->
+    <div class="card col-full">
+      <div class="card-title">Historial de facturas</div>
+      <div id="facturas-wrap"></div>
+    </div>
+
+    <!-- Cancelar -->
+    <div class="card col-full" style="border-left:4px solid #f8d7d7">
+      <div class="card-title" style="color:var(--color-error)">Cancelar suscripción</div>
+      <div class="cancelar-wrap">
+        <div class="cancelar-info">
+          <div class="cancelar-title">¿Quieres cancelar?</div>
+          <div class="cancelar-desc">Si cancelas, tu acceso se mantendrá activo hasta el 15 de enero de 2026. Tu progreso y historial de tests quedan guardados para siempre, por si decides volver.</div>
+        </div>
+        <button class="btn btn-danger" onclick="abrirModal('modal-cancelar')">
+          <span class="material-symbols-rounded">cancel</span>
+          Cancelar suscripción
+        </button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODAL: Cambiar plan -->
+<div class="modal-overlay" id="modal-cambiar">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-cambiar')">✕</button>
+    <h2 class="modal-title" id="modal-cambiar-titulo">Cambiar a Plan Básico</h2>
+    <p class="modal-body" id="modal-cambiar-body">El cambio se aplicará en tu próximo ciclo de facturación. Hasta entonces seguirás con tu plan actual.</p>
+    <div class="modal-actions">
+      <button class="btn btn-accent btn-full" onclick="cerrarModal('modal-cambiar')">Confirmar cambio</button>
+      <button class="btn btn-ghost btn-full" onclick="cerrarModal('modal-cambiar')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Cambiar método de pago -->
+<div class="modal-overlay" id="modal-pago">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-pago')">✕</button>
+    <h2 class="modal-title">Método de pago</h2>
+    <p class="modal-body">Serás redirigido al portal seguro de Stripe para actualizar tu método de pago. El proceso es rápido y seguro.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary btn-full" onclick="cerrarModal('modal-pago')">
+        <span class="material-symbols-rounded">lock</span>Ir a Stripe
+      </button>
+      <button class="btn btn-ghost btn-full" onclick="cerrarModal('modal-pago')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Cancelar suscripción -->
+<div class="modal-overlay" id="modal-cancelar">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal('modal-cancelar')">✕</button>
+    <h2 class="modal-title">¿Cancelar suscripción?</h2>
+    <p class="modal-body">Tu acceso se mantendrá hasta el <strong>15 de enero de 2026</strong>. Tu progreso y tus resultados quedarán guardados para siempre. Puedes reactivar tu plan cuando quieras.</p>
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-full" onclick="cerrarModal('modal-cancelar')">Sí, cancelar mi suscripción</button>
+      <button class="btn btn-primary btn-full" onclick="cerrarModal('modal-cancelar')">Mantener mi plan Premium</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Facturas
+const FACTURAS = [
+  { desc:'Plan Premium — Cuerpo Administrativo', fecha:'15 dic 2025', importe:'99,00 €' },
+  { desc:'Plan Premium — Cuerpo Administrativo', fecha:'15 nov 2025', importe:'99,00 €' },
+  { desc:'Plan Premium — Cuerpo Administrativo', fecha:'15 oct 2025', importe:'99,00 €' },
+  { desc:'Plan Medio — Cuerpo Administrativo',   fecha:'15 sep 2025', importe:'79,00 €' },
+  { desc:'Plan Medio — Cuerpo Administrativo',   fecha:'15 ago 2025', importe:'79,00 €' },
+  { desc:'Plan Básico — Cuerpo Administrativo',  fecha:'15 jul 2025', importe:'49,00 €' },
+];
+
+const wrap = document.getElementById('facturas-wrap');
+FACTURAS.forEach(f => {
+  const div = document.createElement('div');
+  div.className = 'factura-row';
+  div.innerHTML = `
+    <div class="factura-icon"><span class="material-symbols-rounded">receipt</span></div>
+    <div class="factura-info">
+      <div class="factura-desc">${f.desc}</div>
+      <div class="factura-fecha">${f.fecha}</div>
+    </div>
+    <span class="factura-importe">${f.importe}</span>
+    <span class="factura-dl">PDF</span>`;
+  wrap.appendChild(div);
+});
+
+// Modales
+function abrirModal(id, plan, precio) {
+  if (id === 'modal-cambiar' && plan) {
+    document.getElementById('modal-cambiar-titulo').textContent = `Cambiar a Plan ${plan}`;
+    document.getElementById('modal-cambiar-body').textContent =
+      `Pasarás al Plan ${plan} (${precio}). El cambio se aplicará en tu próximo ciclo de facturación. Hasta entonces seguirás disfrutando de tu plan actual.`;
+  }
+  document.getElementById(id).classList.add('open');
+}
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) cerrarModal(o.id); });
+});
+</script>
+</body>
+</html>

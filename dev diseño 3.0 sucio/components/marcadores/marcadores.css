@@ -1,0 +1,24 @@
+.marcadores { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.marcador {
+  width: 38px; height: 38px;
+  border-radius: 10px 0 10px 0;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s ease;
+  background: #e8f4f5;
+}
+.marcador .material-symbols-rounded { font-size: 20px; color: var(--color-main-dark); opacity: 0.5; }
+.marcador.active-duda  { background: #fff3e0; }
+.marcador.active-duda  .material-symbols-rounded { color: #c07000; opacity: 1; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; }
+.marcador.active-fav   { background: #ffe4d6; }
+.marcador.active-fav   .material-symbols-rounded { color: var(--color-secondary); opacity: 1; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; }
+.marcador.active-dest  { background: #e0ecf8; }
+.marcador.active-dest  .material-symbols-rounded { color: var(--color-main-dark); opacity: 1; font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24; }
+
+@media (max-width: 767px) {
+  /* Marcadores más grandes para dedos */
+  .marcador { width: 44px; height: 44px; }
+  .marcador .material-symbols-rounded { font-size: 24px; }
+
+}

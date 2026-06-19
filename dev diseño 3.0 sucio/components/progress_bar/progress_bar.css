@@ -1,0 +1,23 @@
+/* .progress-wrap {} */
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  color: var(--color-main-dark);
+  margin-bottom: 4px;
+}
+.progress-track {
+  height: 8px;
+  background: #d9eef0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--color-main);
+  transition: width 0.4s ease;
+}
+.progress-fill.accent  { background: var(--color-secondary); }
+.progress-fill.success { background: var(--color-success); }

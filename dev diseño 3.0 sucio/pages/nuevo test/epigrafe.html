@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Epígrafe</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-error: #c11717;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --color-bg: #fefcfb;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 20px 0 rgba(0,0,0,0.10);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+  --sidebar-w: 60px;
+  --sidebar-gap: 84px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #cde8ed 0%, #ddeef5 40%, #f9ddd4 100%);
+  font-family: var(--font-text);
+  color: var(--color-black);
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════ SIDEBAR ══════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 12px; bottom: 12px; left: 12px;
+  width: var(--sidebar-w);
+  background: var(--color-white);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  z-index: 100;
+  transition: width 0.18s ease;
+  overflow: hidden;
+}
+.sidebar:hover { width: 200px; }
+.sidebar-logo { font-family: var(--font-titles); font-size: 0.65rem; font-weight: 600; color: var(--color-main); margin-bottom: 28px; width: var(--sidebar-w); text-align: center; flex-shrink: 0; }
+.sidebar nav { width: 100%; flex: 1; }
+.sidebar ul { list-style: none; }
+.sidebar li a { display: flex; align-items: center; height: 48px; padding: 0 19px; gap: 12px; color: var(--color-main-dark); text-decoration: none; transition: background 0.1s; white-space: nowrap; }
+.sidebar li a:hover, .sidebar li.active a { background: #e8f4f5; }
+.sidebar li.active a { font-weight: 600; }
+.material-symbols-rounded { font-size: 22px; flex-shrink: 0; }
+.nav-text { font-family: var(--font-titles); font-size: 0.85rem; opacity: 0; transition: opacity 0.12s ease; }
+.sidebar:hover .nav-text { opacity: 1; }
+.sidebar-bottom { margin-top: auto; width: 100%; }
+
+/* ══════════════════════════════ MAIN ══════════════════════════════ */
+main {
+  margin-left: var(--sidebar-gap);
+  flex: 1;
+  padding: 36px 36px 60px 20px;
+  min-width: 0;
+  max-width: calc(960px + var(--sidebar-gap) + 36px);
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-titles);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--color-main); text-decoration: none; opacity: 1; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .material-symbols-rounded { font-size: 14px; }
+.breadcrumb .current { color: var(--color-main-dark); font-weight: 600; opacity: 1; }
+
+/* ── Encabezado ── */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.page-num {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 4px;
+}
+.page-title {
+  font-family: var(--font-h1);
+  font-size: 1.4rem;
+  color: var(--color-main-dark);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-desc {
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  color: var(--color-main-dark);
+  opacity: 0.65;
+  max-width: 480px;
+  line-height: 1.5;
+}
+
+/* ── Botones ── */
+.btn {
+  padding: 10px 18px;
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--br-small);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn .material-symbols-rounded { font-size: 17px; }
+.btn-accent  { background: var(--color-secondary); color: var(--color-white); }
+.btn-accent:hover  { background: var(--color-secondary-dark); transform: translateY(-1px); }
+.btn-primary { background: var(--color-main-dark); color: var(--color-white); }
+.btn-primary:hover { background: var(--color-main); transform: translateY(-1px); }
+.btn-ghost { background: var(--color-white); color: var(--color-main-dark); border: 1px solid #c8dde2; box-shadow: var(--shadow); }
+.btn-ghost:hover { border-color: var(--color-main); color: var(--color-main); }
+.btn-sm { padding: 7px 14px; font-size: 0.75rem; }
+
+/* ══════════════════════════════ STATS ══════════════════════════════ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  text-align: center;
+}
+.stat-num { font-family: var(--font-h1); font-size: 1.4rem; color: var(--color-main-dark); line-height: 1; margin-bottom: 4px; }
+.stat-num.accent  { color: var(--color-secondary); }
+.stat-num.success { color: var(--color-success); }
+.stat-label { font-family: var(--font-text); font-size: 0.7rem; color: var(--color-main-dark); opacity: 0.6; }
+
+/* Barra progreso global */
+.prog-global {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.prog-global-label { font-family: var(--font-titles); font-size: 0.82rem; font-weight: 600; color: var(--color-main-dark); white-space: nowrap; flex-shrink: 0; }
+.prog-track { flex: 1; height: 10px; background: #d9eef0; border-radius: 5px; overflow: hidden; }
+.prog-fill  { height: 100%; background: var(--color-secondary); border-radius: 5px; }
+.prog-pct   { font-family: var(--font-h1); font-size: 1.1rem; color: var(--color-main-dark); flex-shrink: 0; }
+
+/* ══════════════════════════════ GRID ══════════════════════════════ */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+.section-label {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-main);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 12px;
+}
+
+/* ══════════════════════════════ TEMAS ══════════════════════════════ */
+.temas-list { display: flex; flex-direction: column; gap: 10px; }
+
+.tema-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 18px 22px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  display: block;
+  border-left: 4px solid var(--color-main-light);
+}
+.tema-card:hover { transform: translateY(-2px); box-shadow: 2px 6px 20px rgba(0,0,0,0.13); }
+.tema-card.completado { border-color: var(--color-success); }
+.tema-card.en-curso   { border-color: var(--color-main); }
+.tema-card.sin-empezar { border-color: #d0e4e8; }
+.tema-card.repasar    { border-color: var(--color-secondary); }
+
+.tema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.tema-left { flex: 1; min-width: 0; }
+.tema-num {
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  color: var(--color-main-dark);
+  opacity: 0.55;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 3px;
+}
+.tema-name {
+  font-family: var(--font-titles);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-main-dark);
+  line-height: 1.3;
+}
+
+.tema-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+
+/* Badge estado */
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--br-small);
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.badge-completado  { background: #d4f0db; color: var(--color-success); }
+.badge-en-curso    { background: #e0ecf8; color: var(--color-main-dark); }
+.badge-sin-empezar { background: #f0f4f6; color: #8a9faa; }
+.badge-repasar     { background: #ffe4d6; color: var(--color-secondary-dark); }
+.estado-badge .material-symbols-rounded { font-size: 12px; }
+
+/* Nota del tema */
+.tema-nota {
+  font-family: var(--font-h1);
+  font-size: 1rem;
+  color: var(--color-main-dark);
+}
+.tema-nota.ok  { color: var(--color-success); }
+.tema-nota.mid { color: var(--color-secondary); }
+.tema-nota.bad { color: var(--color-error); }
+
+/* Footer del tema */
+.tema-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tema-meta {
+  display: flex;
+  gap: 14px;
+  font-family: var(--font-text);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+}
+.tema-meta span { display: flex; align-items: center; gap: 4px; }
+.tema-meta .material-symbols-rounded { font-size: 14px; }
+
+/* ══════════════════════════════ COLUMNA DERECHA ══════════════════════════════ */
+.right-col { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.card-title {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-main);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+
+/* Rendimiento */
+.rend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid #f0f6f8;
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  gap: 8px;
+}
+.rend-row:last-child { border-bottom: none; }
+.rend-key { color: var(--color-main-dark); opacity: 0.6; }
+.rend-val { font-weight: 700; color: var(--color-main-dark); }
+.rend-val.ok  { color: var(--color-success); }
+.rend-val.err { color: var(--color-secondary); }
+
+/* Evolución mini */
+.evol-chart { height: 120px; position: relative; }
+
+/* Accesos rápidos */
+.acceso-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f6f8;
+  gap: 10px;
+}
+.acceso-row:last-child { border-bottom: none; }
+.acceso-info {}
+.acceso-label {
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+  margin-bottom: 2px;
+}
+.acceso-desc {
+  font-family: var(--font-text);
+  font-size: 0.7rem;
+  color: var(--color-main-dark);
+  opacity: 0.5;
+}
+
+/* ══════════════════════════════ MÓVIL ══════════════════════════════ */
+@media (max-width: 767px) {
+  .sidebar { top:auto; left:12px; right:12px; bottom:12px; width:auto !important; height:62px; flex-direction:row; border-radius:20px; padding:0 4px; }
+  .sidebar-logo { display:none; }
+  .sidebar nav { flex:1; }
+  .sidebar ul { display:flex; flex-direction:row; justify-content:space-around; align-items:center; height:62px; }
+  .sidebar li { display:flex; }
+  .sidebar li a { width:50px; height:50px; padding:0; justify-content:center; border-radius:12px; }
+  .nav-text { display:none !important; }
+  .sidebar-bottom { display:none; }
+  main { margin-left:0; margin-bottom:86px; padding:20px 14px 40px; width:100%; max-width:100%; overflow-x:hidden; }
+  .page-header { flex-direction: column; }
+  .page-title { font-size: 1.15rem; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .prog-global { flex-wrap: wrap; gap: 10px; }
+  .content-grid { grid-template-columns: 1fr; }
+  .tema-card { padding: 14px 14px; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li class="active"><a href="mis-oposiciones.html"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li><a href="estadisticas.html"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li><a href="perfil.html"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<main>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="mis-oposiciones.html">Mis oposiciones</a>
+    <span class="material-symbols-rounded">chevron_right</span>
+    <a href="oposicion.html">Cuerpo Administrativo del Estado</a>
+    <span class="material-symbols-rounded">chevron_right</span>
+    <a href="bloque.html">Bloque I</a>
+    <span class="material-symbols-rounded">chevron_right</span>
+    <span class="current">Epígrafe 1.1</span>
+  </div>
+
+  <!-- Encabezado -->
+  <div class="page-header">
+    <div>
+      <div class="page-num">Epígrafe 1.1 · Bloque I · Cuerpo Administrativo del Estado</div>
+      <h1 class="page-title">La Constitución Española.<br>Estructura, contenido y principios</h1>
+      <p class="page-desc">Estudio de la norma fundamental del ordenamiento jurídico español: su elaboración, estructura formal, contenido esencial y los principios que la informan.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+      <a href="nuevo-test.html" class="btn btn-accent">
+        <span class="material-symbols-rounded">quiz</span>
+        Test de este epígrafe
+      </a>
+      <a href="nuevo-test.html" class="btn btn-ghost btn-sm">
+        <span class="material-symbols-rounded">refresh</span>
+        Repetir falladas
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">90%</div>
+      <div class="stat-label">Progreso</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Temas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num success">9,2</div>
+      <div class="stat-label">Nota media</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num accent">12</div>
+      <div class="stat-label">Tests realizados</div>
+    </div>
+  </div>
+
+  <!-- Barra progreso -->
+  <div class="prog-global">
+    <span class="prog-global-label">Progreso del epígrafe</span>
+    <div class="prog-track"><div class="prog-fill" style="width:90%"></div></div>
+    <span class="prog-pct">90%</span>
+  </div>
+
+  <!-- Grid -->
+  <div class="content-grid">
+
+    <!-- Temas -->
+    <div>
+      <div class="section-label">Temas</div>
+      <div class="temas-list" id="temas-list"></div>
+    </div>
+
+    <!-- Col derecha -->
+    <div class="right-col">
+
+      <!-- Evolución -->
+      <div class="card">
+        <div class="card-title">Evolución de notas</div>
+        <div class="evol-chart"><canvas id="evol-chart"></canvas></div>
+      </div>
+
+      <!-- Rendimiento -->
+      <div class="card">
+        <div class="card-title">Rendimiento</div>
+        <div class="rend-row"><span class="rend-key">Mejor nota</span><span class="rend-val ok">9,8</span></div>
+        <div class="rend-row"><span class="rend-key">Última nota</span><span class="rend-val ok">9,2</span></div>
+        <div class="rend-row"><span class="rend-key">Nota media</span><span class="rend-val ok">9,2</span></div>
+        <div class="rend-row"><span class="rend-key">Tests totales</span><span class="rend-val">12</span></div>
+        <div class="rend-row"><span class="rend-key">Tiempo medio</span><span class="rend-val">11:30</span></div>
+      </div>
+
+      <!-- Accesos rápidos -->
+      <div class="card">
+        <div class="card-title">Accesos rápidos</div>
+        <div class="acceso-row">
+          <div class="acceso-info">
+            <div class="acceso-label">Preguntas favoritas</div>
+            <div class="acceso-desc">8 preguntas guardadas de este epígrafe</div>
+          </div>
+          <a href="favoritos.html" class="btn btn-ghost btn-sm">Ver</a>
+        </div>
+        <div class="acceso-row">
+          <div class="acceso-info">
+            <div class="acceso-label">Preguntas con duda</div>
+            <div class="acceso-desc">3 preguntas marcadas como duda</div>
+          </div>
+          <a href="favoritos.html" class="btn btn-ghost btn-sm">Ver</a>
+        </div>
+        <div class="acceso-row">
+          <div class="acceso-info">
+            <div class="acceso-label">Último resultado</div>
+            <div class="acceso-desc">Test del 12/06 — 9,2 / 10</div>
+          </div>
+          <a href="resultados.html" class="btn btn-ghost btn-sm">Ver</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── Temas ──
+const TEMAS = [
+  { num:'Tema 1', nombre:'La elaboración y aprobación de la Constitución. El proceso constituyente de 1977-1978', tests:8, preguntas:320, nota:9.8, estado:'completado' },
+  { num:'Tema 2', nombre:'Estructura formal de la Constitución. El Título Preliminar y los principios fundamentales', tests:6, preguntas:280, nota:9.2, estado:'completado' },
+  { num:'Tema 3', nombre:'La reforma constitucional. Los procedimientos del artículo 167 y 168', tests:4, preguntas:210, nota:8.5, estado:'en-curso' },
+  { num:'Tema 4', nombre:'Interpretación y aplicación de la Constitución. El valor normativo', tests:0, preguntas:180, nota:0, estado:'sin-empezar' },
+];
+
+const BADGE_HTML = {
+  'completado':  '<span class="estado-badge badge-completado"><span class="material-symbols-rounded">check_circle</span>Completado</span>',
+  'en-curso':    '<span class="estado-badge badge-en-curso"><span class="material-symbols-rounded">pending</span>En curso</span>',
+  'sin-empezar': '<span class="estado-badge badge-sin-empezar"><span class="material-symbols-rounded">radio_button_unchecked</span>Sin empezar</span>',
+  'repasar':     '<span class="estado-badge badge-repasar"><span class="material-symbols-rounded">replay</span>Repasar</span>',
+};
+
+function notaClass(n) {
+  if (n === 0) return '';
+  if (n >= 7)  return 'ok';
+  if (n >= 5)  return 'mid';
+  return 'bad';
+}
+
+const list = document.getElementById('temas-list');
+TEMAS.forEach(t => {
+  const a = document.createElement('a');
+  a.className = `tema-card ${t.estado}`;
+  a.href = 'tema.html';
+  const nc = notaClass(t.nota);
+  a.innerHTML = `
+    <div class="tema-header">
+      <div class="tema-left">
+        <div class="tema-num">${t.num}</div>
+        <div class="tema-name">${t.nombre}</div>
+      </div>
+      <div class="tema-right">
+        ${BADGE_HTML[t.estado]}
+        ${t.nota > 0
+          ? `<span class="tema-nota ${nc}">${t.nota}</span>`
+          : `<span class="tema-nota" style="opacity:0.3;font-size:0.85rem">—</span>`}
+      </div>
+    </div>
+    <div class="tema-footer">
+      <div class="tema-meta">
+        <span><span class="material-symbols-rounded">quiz</span>${t.tests} tests realizados</span>
+        <span><span class="material-symbols-rounded">help</span>${t.preguntas} preguntas</span>
+      </div>
+    </div>`;
+  list.appendChild(a);
+});
+
+// ── Evolución chart ──
+new Chart(document.getElementById('evol-chart').getContext('2d'), {
+  type: 'line',
+  data: {
+    labels: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
+    datasets: [{
+      data: [6.5, 7.2, 7.8, 8.0, 8.5, 8.2, 8.8, 9.0, 9.2, 9.5, 9.0, 9.2],
+      borderColor: '#008e97',
+      pointBackgroundColor: '#008e97',
+      tension: 0.45,
+      fill: true,
+      backgroundColor: 'rgba(0,142,151,0.08)',
+      borderWidth: 2,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#002634',
+        titleFont: { family:'IBM Plex Mono', size:10 },
+        bodyFont:  { family:'IBM Plex Mono', size:10 },
+        callbacks: { label: ctx => ' Nota: ' + ctx.parsed.y }
+      }
+    },
+    scales: {
+      x: { grid: { color:'rgba(0,0,0,0.04)' }, ticks: { font:{family:'IBM Plex Mono',size:9}, color:'#085d7c' } },
+      y: { min:5, max:10, grid: { color:'rgba(0,0,0,0.04)' }, ticks: { font:{family:'IBM Plex Mono',size:9}, color:'#085d7c', stepSize:1 } }
+    }
+  }
+});
+</script>
+</body>
+</html>

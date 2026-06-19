@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Página no encontrada — opositivo.es</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 24px 0 rgba(0,0,0,0.12);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #cde8ed 0%, #ddeef5 40%, #f9ddd4 100%);
+  font-family: var(--font-text);
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+/* ── Número 404 de fondo ── */
+.bg-number {
+  position: fixed;
+  font-family: var(--font-h1);
+  font-size: 40vw;
+  color: rgba(8,93,124,0.05);
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 52px 56px;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Código de error ── */
+.error-code {
+  font-family: var(--font-h1);
+  font-size: 5rem;
+  color: var(--color-main-dark);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.error-code span { color: var(--color-secondary); }
+
+/* ── Separador ── */
+.sep {
+  width: 60px;
+  height: 3px;
+  background: var(--color-main-light);
+  border-radius: 2px;
+  margin: 20px auto;
+}
+
+/* ── Textos ── */
+.error-title {
+  font-family: var(--font-titles);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-main-dark);
+  margin-bottom: 10px;
+}
+.error-desc {
+  font-family: var(--font-text);
+  font-size: 0.88rem;
+  color: var(--color-main-dark);
+  opacity: 0.65;
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0 auto 32px;
+}
+
+/* ── Acciones ── */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.btn {
+  padding: 10px 15px;
+  font-family: var(--font-titles);
+  font-size: 1rem;
+  box-shadow: 1px 1px 10px 0 rgba(0,0,0,0.2);
+  border-radius: var(--br-small);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+}
+.btn-primary {
+  background-color: var(--color-main-dark);
+  color: var(--color-white);
+}
+.btn-primary:hover {
+  background-color: var(--color-white);
+  color: var(--color-main-dark);
+}
+.btn-secondary {
+  background-color: var(--color-main);
+  color: var(--color-white);
+}
+.btn-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-main);
+}
+.btn-accent {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+.btn-accent:hover {
+  background-color: var(--color-white);
+  color: var(--color-secondary);
+}
+.btn-primary:active,
+.btn-secondary:active,
+.btn-accent:active { box-shadow: none; }
+
+/* ── Links rápidos ── */
+.quick-links-label {
+  font-family: var(--font-titles);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-main-dark);
+  opacity: 0.4;
+  margin-bottom: 12px;
+}
+.quick-links {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.quick-link {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: var(--color-main-dark);
+  text-decoration: none;
+  padding: 6px 14px;
+  background: #e8f4f5;
+  border-radius: var(--br-small);
+  box-shadow: 1px 1px 10px 0 rgba(0,0,0,0.10);
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.quick-link:hover { background: var(--color-main-dark); color: var(--color-white); }
+.quick-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+/* ══ MÓVIL ══ */
+@media (max-width: 767px) {
+  body { align-items: flex-end; padding: 1rem; }
+  .card { padding: 36px 24px 40px; border-radius: 20px 0 20px 0; }
+  .error-code { font-size: 3.5rem; }
+  .actions { flex-direction: column; }
+  .actions .btn { width: 100%; justify-content: center; }
+  .bg-number { font-size: 60vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-number">404</div>
+
+<div class="card">
+  <div class="error-code">4<span>0</span>4</div>
+
+  <div class="sep"></div>
+
+  <div class="error-title">Esta página no existe</div>
+  <p class="error-desc">
+    La página que buscas se ha movido, eliminado o nunca existió. Pero tu progreso está a salvo — volvamos a donde importa.
+  </p>
+
+  <div class="actions">
+    <a href="dashboard.html" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Ir al Dashboard
+    </a>
+    <button class="btn btn-secondary" onclick="history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver atrás
+    </button>
+  </div>
+
+  <div class="quick-links-label">O ve directamente a</div>
+  <div class="quick-links">
+    <a href="mis-oposiciones.html" class="quick-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Mis oposiciones
+    </a>
+    <a href="nuevo-test.html" class="quick-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Hacer un test
+    </a>
+    <a href="estadisticas.html" class="quick-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Estadísticas
+    </a>
+    <a href="perfil.html" class="quick-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Mi perfil
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Vídeos — opositivo.es</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --color-bg: #fefcfb;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 10px 0 rgba(0,0,0,0.2);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+  --sidebar-w: 60px;
+  --sidebar-gap: 84px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { min-height:100vh; background:linear-gradient(135deg,#cde8ed 0%,#ddeef5 40%,#f9ddd4 100%); font-family:var(--font-text); color:var(--color-black); display:flex; overflow-x:hidden; }
+
+/* ══ SIDEBAR ══ */
+.sidebar { position:fixed; top:12px; bottom:12px; left:12px; width:var(--sidebar-w); background:var(--color-white); border-radius:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; padding:16px 0; z-index:100; transition:width 0.18s ease; overflow:hidden; }
+.sidebar:hover { width:200px; }
+.sidebar-logo { font-family:var(--font-titles); font-size:0.65rem; font-weight:600; color:var(--color-main); margin-bottom:28px; width:var(--sidebar-w); text-align:center; flex-shrink:0; }
+.sidebar nav { width:100%; flex:1; }
+.sidebar ul { list-style:none; }
+.sidebar li a { display:flex; align-items:center; height:48px; padding:0 19px; gap:12px; color:var(--color-main-dark); text-decoration:none; transition:background 0.1s; white-space:nowrap; }
+.sidebar li a:hover, .sidebar li.active a { background:#e8f4f5; }
+.sidebar li.active a { font-weight:600; }
+.material-symbols-rounded { font-size:22px; flex-shrink:0; }
+.nav-text { font-family:var(--font-titles); font-size:0.85rem; opacity:0; transition:opacity 0.12s ease; }
+.sidebar:hover .nav-text { opacity:1; }
+.sidebar-bottom { margin-top:auto; width:100%; }
+
+/* ══ MAIN ══ */
+main { margin-left:var(--sidebar-gap); flex:1; padding:36px 36px 60px 20px; min-width:0; max-width:calc(1100px + var(--sidebar-gap) + 36px); }
+
+/* Breadcrumb */
+.breadcrumb { display:flex; align-items:center; gap:6px; font-family:var(--font-titles); font-size:0.72rem; color:var(--color-main-dark); opacity:0.6; margin-bottom:16px; flex-wrap:wrap; }
+.breadcrumb a { color:var(--color-main); text-decoration:none; opacity:1; }
+.breadcrumb a:hover { text-decoration:underline; }
+.breadcrumb .material-symbols-rounded { font-size:14px; }
+.breadcrumb .current { color:var(--color-main-dark); font-weight:600; opacity:1; }
+
+/* Encabezado */
+.page-label { font-family:var(--font-titles); font-size:0.9rem; color:var(--color-main); margin-bottom:4px; }
+.page-title { font-family:var(--font-h1); font-size:1.8rem; color:var(--color-main-dark); margin-bottom:24px; line-height:1.2; }
+
+/* ══ TOOLBAR ══ */
+.toolbar { display:flex; gap:10px; margin-bottom:24px; flex-wrap:wrap; align-items:center; }
+
+.search-wrap { position:relative; flex:1; min-width:200px; }
+.search-wrap .material-symbols-rounded { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:18px; color:var(--color-main-dark); opacity:0.4; pointer-events:none; }
+.search-input { width:100%; border:1px solid #c8dde2; border-radius:var(--br-small); background:var(--color-white); color:var(--color-black); font-family:var(--font-titles); font-size:0.82rem; padding:10px 14px 10px 38px; box-shadow:var(--shadow); transition:border-color 0.15s; }
+.search-input:focus { outline:none; border-color:var(--color-main); }
+.search-input::placeholder { color:var(--color-main-dark); opacity:0.35; }
+
+.filter-select { border:1px solid #c8dde2; border-radius:var(--br-small); background:var(--color-white); color:var(--color-main-dark); font-family:var(--font-titles); font-size:0.78rem; padding:10px 30px 10px 12px; cursor:pointer; box-shadow:var(--shadow); appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23085d7c' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; background-color:var(--color-white); }
+.filter-select:focus { outline:none; border-color:var(--color-main); }
+
+.count-label { font-family:var(--font-titles); font-size:0.75rem; color:var(--color-main-dark); opacity:0.55; margin-left:auto; white-space:nowrap; }
+.count-label span { font-weight:700; opacity:1; }
+
+/* ══ VISTA ACTIVA (vídeo grande) ══ */
+.player-section {
+  display: none;
+  margin-bottom: 28px;
+}
+.player-section.visible { display: block; }
+
+.player-wrap {
+  background: var(--color-main-dark);
+  border-radius: var(--br-big);
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  position: relative;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.player-thumb {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-main-dark) 0%, var(--color-main) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+.player-play-btn {
+  width: 72px; height: 72px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+  backdrop-filter: blur(4px);
+}
+.player-play-btn:hover { background: rgba(255,255,255,0.28); }
+.player-play-btn .material-symbols-rounded {
+  font-size: 40px;
+  color: var(--color-white);
+  font-variation-settings: "FILL" 1,"wght" 300,"GRAD" 0,"opsz" 48;
+}
+.player-titulo {
+  font-family: var(--font-titles);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.player-info { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+.player-info-left {}
+.player-info-name { font-family:var(--font-titles); font-size:1rem; font-weight:700; color:var(--color-main-dark); margin-bottom:4px; }
+.player-info-meta { font-family:var(--font-text); font-size:0.8rem; color:var(--color-main-dark); opacity:0.6; display:flex; gap:14px; flex-wrap:wrap; }
+.player-info-meta span { display:flex; align-items:center; gap:4px; }
+.player-info-meta .material-symbols-rounded { font-size:15px; }
+.btn-close-player { font-family:var(--font-titles); font-size:0.75rem; color:var(--color-secondary); text-decoration:underline; cursor:pointer; background:none; border:none; }
+
+/* ══ SECCIONES POR BLOQUE ══ */
+.bloque-section { margin-bottom: 32px; }
+.bloque-section.hidden { display: none; }
+
+.bloque-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #d9eef0;
+}
+.bloque-pill {
+  background: #e0f0f2;
+  color: var(--color-main-dark);
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--br-small);
+  flex-shrink: 0;
+}
+.bloque-nombre {
+  font-family: var(--font-titles);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-main-dark);
+  flex: 1;
+}
+.bloque-count {
+  font-family: var(--font-titles);
+  font-size: 0.7rem;
+  color: var(--color-main-dark);
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
+/* ══ GRID DE VÍDEOS ══ */
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.video-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.video-card:hover { transform: translateY(-3px); box-shadow: 2px 6px 20px rgba(0,0,0,0.15); }
+.video-card.active { outline: 3px solid var(--color-secondary); }
+
+.video-thumb {
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.video-thumb .play-icon {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+  backdrop-filter: blur(2px);
+  z-index: 1;
+}
+.video-card:hover .play-icon { background: rgba(255,255,255,0.32); }
+.play-icon .material-symbols-rounded {
+  font-size: 22px;
+  color: var(--color-white);
+  font-variation-settings: "FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24;
+}
+.video-duracion {
+  position: absolute;
+  bottom: 6px; right: 8px;
+  font-family: var(--font-titles);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background: rgba(0,0,0,0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 1;
+}
+.video-visto {
+  position: absolute;
+  top: 6px; left: 8px;
+  z-index: 1;
+}
+.video-visto .material-symbols-rounded {
+  font-size: 18px;
+  color: var(--color-white);
+  background: var(--color-success);
+  border-radius: 50%;
+  font-variation-settings: "FILL" 1,"wght" 300,"GRAD" 0,"opsz" 24;
+}
+
+/* Barra de progreso del vídeo */
+.video-prog {
+  height: 3px;
+  background: #d9eef0;
+}
+.video-prog-fill {
+  height: 100%;
+  background: var(--color-secondary);
+}
+
+.video-info { padding: 12px 14px; }
+.video-tipo {
+  font-family: var(--font-titles);
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-main);
+  margin-bottom: 4px;
+}
+.video-nombre {
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+  line-height: 1.35;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.video-tema {
+  font-family: var(--font-text);
+  font-size: 0.68rem;
+  color: var(--color-main-dark);
+  opacity: 0.5;
+}
+
+/* Estado vacío */
+.empty-state { display:none; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; gap:12px; }
+.empty-state.visible { display:flex; }
+.empty-state .material-symbols-rounded { font-size:48px; color:#c8dde2; }
+.empty-title { font-family:var(--font-titles); font-size:0.95rem; font-weight:600; color:var(--color-main-dark); opacity:0.5; }
+.empty-sub { font-family:var(--font-text); font-size:0.82rem; color:var(--color-main-dark); opacity:0.4; max-width:260px; line-height:1.5; }
+
+/* ══ MÓVIL ══ */
+@media (max-width:767px) {
+  .sidebar { top:auto; left:12px; right:12px; bottom:12px; width:auto !important; height:62px; flex-direction:row; border-radius:20px; padding:0 4px; }
+  .sidebar-logo { display:none; }
+  .sidebar nav { flex:1; }
+  .sidebar ul { display:flex; flex-direction:row; justify-content:space-around; align-items:center; height:62px; }
+  .sidebar li { display:flex; }
+  .sidebar li a { width:50px; height:50px; padding:0; justify-content:center; border-radius:12px; }
+  .nav-text { display:none !important; }
+  .sidebar-bottom { display:none; }
+  main { margin-left:0; margin-bottom:86px; padding:20px 14px 40px; width:100%; max-width:100%; overflow-x:hidden; }
+  .page-title { font-size:1.35rem; margin-bottom:18px; }
+  .toolbar { gap:8px; }
+  .search-wrap { min-width:100%; }
+  .count-label { margin-left:0; }
+  .videos-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:10px; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li class="active"><a href="mis-oposiciones.html"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li><a href="estadisticas.html"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li><a href="perfil.html"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<main>
+  <div class="breadcrumb">
+    <a href="oposicion.html">Cuerpo Administrativo del Estado</a>
+    <span class="material-symbols-rounded">chevron_right</span>
+    <span class="current">Vídeos</span>
+  </div>
+
+  <p class="page-label">Cuerpo Administrativo del Estado</p>
+  <h1 class="page-title">Biblioteca de Vídeos</h1>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="material-symbols-rounded">search</span>
+      <input class="search-input" type="text" placeholder="Buscar vídeo..." id="search-input" oninput="filtrar()"/>
+    </div>
+    <select class="filter-select" id="filter-bloque" onchange="filtrar()">
+      <option value="">Todos los bloques</option>
+      <option value="Bloque I">Bloque I</option>
+      <option value="Bloque II">Bloque II</option>
+      <option value="Bloque III">Bloque III</option>
+      <option value="Bloque IV">Bloque IV</option>
+      <option value="Bloque V">Bloque V</option>
+    </select>
+    <select class="filter-select" id="filter-tipo" onchange="filtrar()">
+      <option value="">Todos los tipos</option>
+      <option value="Clase magistral">Clase magistral</option>
+      <option value="Resumen examen">Resumen examen</option>
+      <option value="Píldora">Píldora</option>
+      <option value="Supuesto">Supuesto práctico</option>
+    </select>
+    <select class="filter-select" id="filter-vistos" onchange="filtrar()">
+      <option value="">Todos</option>
+      <option value="vistos">Solo vistos</option>
+      <option value="no-vistos">Sin ver</option>
+    </select>
+    <span class="count-label"><span id="count">0</span> vídeos</span>
+  </div>
+
+  <!-- Player activo -->
+  <div class="player-section" id="player-section">
+    <div class="player-wrap">
+      <div class="player-thumb" id="player-thumb">
+        <div class="player-play-btn">
+          <span class="material-symbols-rounded">play_arrow</span>
+        </div>
+        <div class="player-titulo" id="player-titulo"></div>
+      </div>
+    </div>
+    <div class="player-info">
+      <div class="player-info-left">
+        <div class="player-info-name" id="player-name"></div>
+        <div class="player-info-meta" id="player-meta"></div>
+      </div>
+      <button class="btn-close-player" onclick="cerrarPlayer()">✕ Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div id="contenido"></div>
+  <div class="empty-state" id="empty-state">
+    <span class="material-symbols-rounded">videocam_off</span>
+    <div class="empty-title">Ningún vídeo coincide</div>
+    <div class="empty-sub">Prueba con otros filtros o términos de búsqueda.</div>
+  </div>
+</main>
+
+<script>
+const GRADIENTS = [
+  'linear-gradient(135deg,#085d7c,#008e97)',
+  'linear-gradient(135deg,#700600,#fc4c02)',
+  'linear-gradient(135deg,#1d9b3a,#085d7c)',
+  'linear-gradient(135deg,#085d7c,#84e5ea)',
+  'linear-gradient(135deg,#fc4c02,#085d7c)',
+  'linear-gradient(135deg,#008e97,#1d9b3a)',
+];
+
+const VIDEOS = [
+  // Bloque I
+  { id:1,  bloque:'Bloque I',  tema:'Tema 1', tipo:'Clase magistral', nombre:'El proceso constituyente de 1977–1978', duracion:'18:42', visto:true,  progreso:100, grad:0 },
+  { id:2,  bloque:'Bloque I',  tema:'Tema 1', tipo:'Píldora',          nombre:'Fechas clave de la Constitución que caen en examen', duracion:'09:30', visto:true,  progreso:100, grad:3 },
+  { id:3,  bloque:'Bloque I',  tema:'Tema 2', tipo:'Clase magistral', nombre:'Derechos fundamentales: artículos 14 al 29', duracion:'22:15', visto:true,  progreso:75,  grad:1 },
+  { id:4,  bloque:'Bloque I',  tema:'Tema 2', tipo:'Resumen examen',  nombre:'Los 7 derechos más preguntados en OPE', duracion:'11:05', visto:false, progreso:0,   grad:2 },
+  { id:5,  bloque:'Bloque I',  tema:'Tema 3', tipo:'Clase magistral', nombre:'La Corona y el Poder Legislativo', duracion:'19:48', visto:false, progreso:0,   grad:4 },
+  { id:6,  bloque:'Bloque I',  tema:'Tema 3', tipo:'Píldora',          nombre:'Las Cortes Generales: composición y funciones', duracion:'08:22', visto:false, progreso:0,   grad:5 },
+  // Bloque II
+  { id:7,  bloque:'Bloque II', tema:'Tema 4', tipo:'Clase magistral', nombre:'El juicio ordinario paso a paso', duracion:'28:10', visto:true,  progreso:100, grad:2 },
+  { id:8,  bloque:'Bloque II', tema:'Tema 4', tipo:'Supuesto',         nombre:'Supuesto práctico — LEC art. 249', duracion:'15:30', visto:false, progreso:40,  grad:0 },
+  { id:9,  bloque:'Bloque II', tema:'Tema 5', tipo:'Resumen examen',  nombre:'Medidas cautelares: cuándo y cómo solicitarlas', duracion:'12:45', visto:false, progreso:0,   grad:3 },
+  { id:10, bloque:'Bloque II', tema:'Tema 6', tipo:'Clase magistral', nombre:'La ejecución forzosa en la LEC', duracion:'21:00', visto:false, progreso:0,   grad:1 },
+  // Bloque III
+  { id:11, bloque:'Bloque III',tema:'Tema 7', tipo:'Clase magistral', nombre:'El procedimiento abreviado en el proceso penal', duracion:'24:55', visto:false, progreso:0,   grad:4 },
+  { id:12, bloque:'Bloque III',tema:'Tema 7', tipo:'Píldora',          nombre:'Diferencias entre diligencias previas y urgentes', duracion:'07:18', visto:false, progreso:0,   grad:5 },
+  { id:13, bloque:'Bloque III',tema:'Tema 8', tipo:'Resumen examen',  nombre:'Los recursos penales más preguntados', duracion:'10:40', visto:false, progreso:0,   grad:2 },
+  // Bloque IV
+  { id:14, bloque:'Bloque IV', tema:'Tema 9', tipo:'Clase magistral', nombre:'El CGPJ: composición y funciones', duracion:'17:22', visto:false, progreso:0,   grad:0 },
+  { id:15, bloque:'Bloque IV', tema:'Tema 10',tipo:'Supuesto',         nombre:'Supuesto — competencia territorial de los juzgados', duracion:'13:15', visto:false, progreso:0,   grad:3 },
+  // Bloque V
+  { id:16, bloque:'Bloque V',  tema:'Tema 11',tipo:'Clase magistral', nombre:'La Ley 39/2015: principios del procedimiento administrativo', duracion:'26:30', visto:false, progreso:0,   grad:1 },
+  { id:17, bloque:'Bloque V',  tema:'Tema 11',tipo:'Píldora',          nombre:'Plazos clave de la Ley 39/2015', duracion:'06:55', visto:false, progreso:0,   grad:4 },
+  { id:18, bloque:'Bloque V',  tema:'Tema 12',tipo:'Resumen examen',  nombre:'Nulidad y anulabilidad del acto administrativo', duracion:'14:10', visto:false, progreso:0,   grad:5 },
+];
+
+let activeId = null;
+
+function filtrar() {
+  const q       = document.getElementById('search-input').value.toLowerCase();
+  const bloque  = document.getElementById('filter-bloque').value;
+  const tipo    = document.getElementById('filter-tipo').value;
+  const vistos  = document.getElementById('filter-vistos').value;
+
+  const filtered = VIDEOS.filter(v =>
+    (!q      || v.nombre.toLowerCase().includes(q) || v.tema.toLowerCase().includes(q)) &&
+    (!bloque || v.bloque === bloque) &&
+    (!tipo   || v.tipo === tipo) &&
+    (!vistos || (vistos === 'vistos' ? v.visto : !v.visto))
+  );
+
+  document.getElementById('count').textContent = filtered.length;
+  renderContenido(filtered);
+}
+
+function renderContenido(videos) {
+  const c     = document.getElementById('contenido');
+  const empty = document.getElementById('empty-state');
+  c.innerHTML = '';
+
+  if (videos.length === 0) { empty.classList.add('visible'); return; }
+  empty.classList.remove('visible');
+
+  // Agrupar por bloque
+  const porBloque = {};
+  videos.forEach(v => {
+    if (!porBloque[v.bloque]) porBloque[v.bloque] = [];
+    porBloque[v.bloque].push(v);
+  });
+
+  Object.entries(porBloque).forEach(([bloque, vids]) => {
+    const sec = document.createElement('div');
+    sec.className = 'bloque-section';
+    sec.innerHTML = `
+      <div class="bloque-header">
+        <span class="bloque-pill">${bloque}</span>
+        <span class="bloque-nombre">${nombreBloque(bloque)}</span>
+        <span class="bloque-count">${vids.length} vídeo${vids.length !== 1 ? 's':''}</span>
+      </div>
+      <div class="videos-grid" id="grid-${bloque.replace(' ','-')}"></div>`;
+    c.appendChild(sec);
+
+    const grid = sec.querySelector('.videos-grid');
+    vids.forEach(v => {
+      const card = document.createElement('div');
+      card.className = `video-card ${activeId === v.id ? 'active':''}`;
+      card.id = 'card-' + v.id;
+      card.onclick = () => abrirVideo(v);
+      card.innerHTML = `
+        <div class="video-thumb" style="background:${GRADIENTS[v.grad]}">
+          ${v.visto ? `<div class="video-visto"><span class="material-symbols-rounded">check_circle</span></div>` : ''}
+          <div class="play-icon"><span class="material-symbols-rounded">play_arrow</span></div>
+          <span class="video-duracion">${v.duracion}</span>
+        </div>
+        <div class="video-prog"><div class="video-prog-fill" style="width:${v.progreso}%"></div></div>
+        <div class="video-info">
+          <div class="video-tipo">${v.tipo}</div>
+          <div class="video-nombre">${v.nombre}</div>
+          <div class="video-tema">${v.tema}</div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  });
+}
+
+function nombreBloque(b) {
+  const nombres = {
+    'Bloque I':   'Derecho Constitucional y Administrativo',
+    'Bloque II':  'Derecho Procesal Civil',
+    'Bloque III': 'Derecho Procesal Penal',
+    'Bloque IV':  'Organización de la Administración de Justicia',
+    'Bloque V':   'Derecho Administrativo',
+  };
+  return nombres[b] || b;
+}
+
+function abrirVideo(v) {
+  activeId = v.id;
+  const section = document.getElementById('player-section');
+  section.classList.add('visible');
+  document.getElementById('player-thumb').style.background = GRADIENTS[v.grad];
+  document.getElementById('player-titulo').textContent = v.nombre;
+  document.getElementById('player-name').textContent = v.nombre;
+  document.getElementById('player-meta').innerHTML = `
+    <span><span class="material-symbols-rounded">layers</span>${v.bloque}</span>
+    <span><span class="material-symbols-rounded">menu_book</span>${v.tema}</span>
+    <span><span class="material-symbols-rounded">timer</span>${v.duracion}</span>
+    <span><span class="material-symbols-rounded">label</span>${v.tipo}</span>`;
+  section.scrollIntoView({ behavior:'smooth', block:'start' });
+  // Marcar como visto
+  const video = VIDEOS.find(x => x.id === v.id);
+  if (video) { video.visto = true; video.progreso = 100; }
+  filtrar();
+}
+
+function cerrarPlayer() {
+  activeId = null;
+  document.getElementById('player-section').classList.remove('visible');
+  filtrar();
+}
+
+// Init
+filtrar();
+</script>
+</body>
+</html>

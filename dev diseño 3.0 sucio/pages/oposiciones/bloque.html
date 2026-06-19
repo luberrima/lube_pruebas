@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Bloque</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-error: #c11717;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --color-bg: #fefcfb;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 20px 0 rgba(0,0,0,0.10);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+  --sidebar-w: 60px;
+  --sidebar-gap: 84px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #cde8ed 0%, #ddeef5 40%, #f9ddd4 100%);
+  font-family: var(--font-text);
+  color: var(--color-black);
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════ SIDEBAR ══════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 12px; bottom: 12px; left: 12px;
+  width: var(--sidebar-w);
+  background: var(--color-white);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  z-index: 100;
+  transition: width 0.18s ease;
+  overflow: hidden;
+}
+.sidebar:hover { width: 200px; }
+.sidebar-logo { font-family: var(--font-titles); font-size: 0.65rem; font-weight: 600; color: var(--color-main); margin-bottom: 28px; width: var(--sidebar-w); text-align: center; flex-shrink: 0; }
+.sidebar nav { width: 100%; flex: 1; }
+.sidebar ul { list-style: none; }
+.sidebar li a { display: flex; align-items: center; height: 48px; padding: 0 19px; gap: 12px; color: var(--color-main-dark); text-decoration: none; transition: background 0.1s; white-space: nowrap; }
+.sidebar li a:hover, .sidebar li.active a { background: #e8f4f5; }
+.sidebar li.active a { font-weight: 600; }
+.material-symbols-rounded { font-size: 22px; flex-shrink: 0; }
+.nav-text { font-family: var(--font-titles); font-size: 0.85rem; opacity: 0; transition: opacity 0.12s ease; }
+.sidebar:hover .nav-text { opacity: 1; }
+.sidebar-bottom { margin-top: auto; width: 100%; }
+
+/* ══════════════════════════════ MAIN ══════════════════════════════ */
+main {
+  margin-left: var(--sidebar-gap);
+  flex: 1;
+  padding: 36px 36px 60px 20px;
+  min-width: 0;
+  max-width: calc(960px + var(--sidebar-gap) + 36px);
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-titles);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--color-main); text-decoration: none; opacity: 1; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .material-symbols-rounded { font-size: 14px; }
+.breadcrumb .current { color: var(--color-main-dark); font-weight: 600; opacity: 1; }
+
+/* ── Encabezado ── */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.page-num {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: var(--color-main);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 4px;
+}
+.page-title {
+  font-family: var(--font-h1);
+  font-size: 1.5rem;
+  color: var(--color-main-dark);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-desc {
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  color: var(--color-main-dark);
+  opacity: 0.65;
+  max-width: 480px;
+  line-height: 1.5;
+}
+
+/* ── Botones ── */
+.btn {
+  padding: 10px 18px;
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--br-small);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn .material-symbols-rounded { font-size: 17px; }
+.btn-accent  { background: var(--color-secondary); color: var(--color-white); }
+.btn-accent:hover  { background: var(--color-secondary-dark); transform: translateY(-1px); }
+.btn-ghost { background: var(--color-white); color: var(--color-main-dark); border: 1px solid #c8dde2; box-shadow: var(--shadow); }
+.btn-ghost:hover { border-color: var(--color-main); color: var(--color-main); }
+
+/* ══════════════════════════════ STATS ══════════════════════════════ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  text-align: center;
+}
+.stat-num { font-family: var(--font-h1); font-size: 1.4rem; color: var(--color-main-dark); line-height: 1; margin-bottom: 4px; }
+.stat-num.accent { color: var(--color-secondary); }
+.stat-num.success { color: var(--color-success); }
+.stat-label { font-family: var(--font-text); font-size: 0.7rem; color: var(--color-main-dark); opacity: 0.6; }
+
+/* Barra progreso global */
+.prog-global {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.prog-global-label { font-family: var(--font-titles); font-size: 0.82rem; font-weight: 600; color: var(--color-main-dark); white-space: nowrap; flex-shrink: 0; }
+.prog-track { flex: 1; height: 10px; background: #d9eef0; border-radius: 5px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--color-main); border-radius: 5px; }
+.prog-pct { font-family: var(--font-h1); font-size: 1.1rem; color: var(--color-main-dark); flex-shrink: 0; }
+
+/* ══════════════════════════════ GRID CONTENIDO ══════════════════════════════ */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ══════════════════════════════ EPÍGRAFES ══════════════════════════════ */
+.section-label {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-main);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 12px;
+}
+
+.epigrafe-list { display: flex; flex-direction: column; gap: 10px; }
+
+.epigrafe-card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 18px 22px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  display: block;
+  border-left: 4px solid var(--color-secondary);
+}
+.epigrafe-card:hover { transform: translateY(-2px); box-shadow: 2px 6px 20px rgba(0,0,0,0.13); }
+
+.epi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.epi-left { flex: 1; min-width: 0; }
+.epi-num {
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 3px;
+}
+.epi-name {
+  font-family: var(--font-titles);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-main-dark);
+  line-height: 1.3;
+}
+.epi-pct {
+  font-family: var(--font-h1);
+  font-size: 0.9rem;
+  color: var(--color-main-dark);
+  flex-shrink: 0;
+}
+
+.epi-prog-track { height: 5px; background: #d9eef0; border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
+.epi-prog-fill  { height: 100%; background: var(--color-secondary); border-radius: 3px; }
+
+.epi-meta {
+  display: flex;
+  gap: 14px;
+  font-family: var(--font-text);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+}
+.epi-meta span { display: flex; align-items: center; gap: 4px; }
+.epi-meta .material-symbols-rounded { font-size: 14px; }
+
+/* Badge estado */
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--br-small);
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.badge-completado { background: #d4f0db; color: var(--color-success); }
+.badge-en-curso   { background: #e0ecf8; color: var(--color-main-dark); }
+.badge-sin-empezar { background: #f0f4f6; color: #8a9faa; }
+.estado-badge .material-symbols-rounded { font-size: 12px; }
+
+/* ══════════════════════════════ COLUMNA DERECHA ══════════════════════════════ */
+.right-col { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.card-title {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-main);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+
+/* Progreso por epígrafe mini */
+.mini-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f6f8;
+}
+.mini-bar-row:last-child { border-bottom: none; }
+.mini-bar-label {
+  font-family: var(--font-titles);
+  font-size: 0.68rem;
+  color: var(--color-main-dark);
+  opacity: 0.65;
+  width: 56px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-bar-track { flex: 1; height: 7px; background: #d9eef0; border-radius: 4px; overflow: hidden; }
+.mini-bar-fill  { height: 100%; background: var(--color-secondary); border-radius: 4px; }
+.mini-bar-val   { font-family: var(--font-titles); font-size: 0.68rem; font-weight: 700; color: var(--color-main-dark); width: 28px; text-align: right; flex-shrink: 0; }
+
+/* Rendimiento row */
+.rend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid #f0f6f8;
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  gap: 8px;
+}
+.rend-row:last-child { border-bottom: none; }
+.rend-key { color: var(--color-main-dark); opacity: 0.6; }
+.rend-val { font-weight: 700; color: var(--color-main-dark); }
+.rend-val.ok  { color: var(--color-success); }
+.rend-val.err { color: var(--color-secondary); }
+
+/* Temas recientes */
+.tema-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f6f8;
+  text-decoration: none;
+  transition: background 0.1s;
+  border-radius: 4px;
+}
+.tema-row:last-child { border-bottom: none; }
+.tema-row:hover { background: #f5fbfc; }
+.tema-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-ok  { background: var(--color-success); }
+.dot-mid { background: var(--color-secondary); }
+.dot-no  { background: #c8dde2; }
+.tema-row-name {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: var(--color-main-dark);
+  flex: 1;
+  line-height: 1.3;
+}
+.tema-row-nota {
+  font-family: var(--font-titles);
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════ MÓVIL ══════════════════════════════ */
+@media (max-width: 767px) {
+  .sidebar { top:auto; left:12px; right:12px; bottom:12px; width:auto !important; height:62px; flex-direction:row; border-radius:20px; padding:0 4px; }
+  .sidebar-logo { display:none; }
+  .sidebar nav { flex:1; }
+  .sidebar ul { display:flex; flex-direction:row; justify-content:space-around; align-items:center; height:62px; }
+  .sidebar li { display:flex; }
+  .sidebar li a { width:50px; height:50px; padding:0; justify-content:center; border-radius:12px; }
+  .nav-text { display:none !important; }
+  .sidebar-bottom { display:none; }
+
+  main { margin-left:0; margin-bottom:86px; padding:20px 14px 40px; width:100%; max-width:100%; overflow-x:hidden; }
+
+  .page-header { flex-direction: column; }
+  .page-title { font-size: 1.2rem; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .prog-global { flex-wrap: wrap; gap: 10px; }
+  .content-grid { grid-template-columns: 1fr; }
+  .epigrafe-card { padding: 14px 14px; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li class="active"><a href="mis-oposiciones.html"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li><a href="estadisticas.html"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li><a href="perfil.html"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<main>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="mis-oposiciones.html">Mis oposiciones</a>
+    <span class="material-symbols-rounded">chevron_right</span>
+    <a href="oposicion.html">Cuerpo Administrativo del Estado</a>
+    <span class="material-symbols-rounded">chevron_right</span>
+    <span class="current">Bloque I — Derecho Constitucional</span>
+  </div>
+
+  <!-- Encabezado -->
+  <div class="page-header">
+    <div>
+      <div class="page-num">Bloque I · Cuerpo Administrativo del Estado</div>
+      <h1 class="page-title">Derecho Constitucional<br>y Administrativo</h1>
+      <p class="page-desc">Fundamentos del ordenamiento jurídico español: la Constitución, los derechos fundamentales y los principios generales del Derecho Administrativo.</p>
+    </div>
+    <a href="nuevo-test.html" class="btn btn-accent">
+      <span class="material-symbols-rounded">quiz</span>
+      Test de este bloque
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">85%</div>
+      <div class="stat-label">Progreso</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Epígrafes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num success">8,2</div>
+      <div class="stat-label">Nota media</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num accent">18</div>
+      <div class="stat-label">Tests realizados</div>
+    </div>
+  </div>
+
+  <!-- Progreso global -->
+  <div class="prog-global">
+    <span class="prog-global-label">Progreso del bloque</span>
+    <div class="prog-track"><div class="prog-fill" style="width:85%"></div></div>
+    <span class="prog-pct">85%</span>
+  </div>
+
+  <!-- Grid -->
+  <div class="content-grid">
+
+    <!-- Epígrafes -->
+    <div>
+      <div class="section-label">Epígrafes</div>
+      <div class="epigrafe-list" id="epigrafe-list"></div>
+    </div>
+
+    <!-- Col derecha -->
+    <div class="right-col">
+
+      <!-- Progreso por epígrafe -->
+      <div class="card">
+        <div class="card-title">Progreso por epígrafe</div>
+        <div id="mini-bars"></div>
+      </div>
+
+      <!-- Rendimiento -->
+      <div class="card">
+        <div class="card-title">Rendimiento</div>
+        <div class="rend-row"><span class="rend-key">Mejor nota</span><span class="rend-val ok">9,5</span></div>
+        <div class="rend-row"><span class="rend-key">Última nota</span><span class="rend-val ok">8,2</span></div>
+        <div class="rend-row"><span class="rend-key">Nota media</span><span class="rend-val ok">8,2</span></div>
+        <div class="rend-row"><span class="rend-key">Tests totales</span><span class="rend-val">18</span></div>
+        <div class="rend-row"><span class="rend-key">Tiempo medio</span><span class="rend-val">14:22</span></div>
+        <div class="rend-row"><span class="rend-key">Mejor tiempo</span><span class="rend-val">09:10</span></div>
+      </div>
+
+      <!-- Temas por repasar -->
+      <div class="card">
+        <div class="card-title">Temas por repasar</div>
+        <div id="temas-repasar"></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+const EPIGRAJES = [
+  { num:'Epígrafe 1.1', nombre:'La Constitución Española. Estructura, contenido y principios', temas:4, progreso:100, nota:9.2, estado:'completado' },
+  { num:'Epígrafe 1.2', nombre:'Derechos fundamentales y libertades públicas', temas:3, progreso:90, nota:8.5, estado:'en-curso' },
+  { num:'Epígrafe 1.3', nombre:'La Corona. El Poder Legislativo y el Poder Ejecutivo', temas:4, progreso:80, nota:8.0, estado:'en-curso' },
+  { num:'Epígrafe 1.4', nombre:'El Poder Judicial. El Tribunal Constitucional', temas:3, progreso:75, nota:7.8, estado:'en-curso' },
+  { num:'Epígrafe 1.5', nombre:'La Administración Pública. Principios generales', temas:5, progreso:70, nota:7.5, estado:'en-curso' },
+  { num:'Epígrafe 1.6', nombre:'El acto administrativo y el procedimiento administrativo', temas:5, progreso:0,  nota:0,   estado:'sin-empezar' },
+];
+
+const BADGE = {
+  'completado':  '<span class="estado-badge badge-completado"><span class="material-symbols-rounded">check_circle</span>Completado</span>',
+  'en-curso':    '<span class="estado-badge badge-en-curso"><span class="material-symbols-rounded">pending</span>En curso</span>',
+  'sin-empezar': '<span class="estado-badge badge-sin-empezar"><span class="material-symbols-rounded">radio_button_unchecked</span>Sin empezar</span>',
+};
+
+// Render epígrafes
+const list = document.getElementById('epigrafe-list');
+EPIGRAJES.forEach(e => {
+  const a = document.createElement('a');
+  a.className = 'epigrafe-card';
+  a.href = 'epigrafe.html';
+  a.innerHTML = `
+    <div class="epi-header">
+      <div class="epi-left">
+        <div class="epi-num">${e.num}</div>
+        <div class="epi-name">${e.nombre}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+        <span class="epi-pct">${e.progreso}%</span>
+        ${BADGE[e.estado]}
+      </div>
+    </div>
+    <div class="epi-prog-track">
+      <div class="epi-prog-fill" style="width:${e.progreso}%"></div>
+    </div>
+    <div class="epi-meta">
+      <span><span class="material-symbols-rounded">menu_book</span>${e.temas} temas</span>
+      ${e.nota > 0
+        ? `<span><span class="material-symbols-rounded">star</span>Nota media: ${e.nota}</span>`
+        : '<span style="opacity:0.4">Sin tests aún</span>'}
+    </div>`;
+  list.appendChild(a);
+});
+
+// Mini barras
+const barsWrap = document.getElementById('mini-bars');
+EPIGRAJES.forEach(e => {
+  const short = e.num.replace('Epígrafe ','Ep. ');
+  const div = document.createElement('div');
+  div.className = 'mini-bar-row';
+  div.innerHTML = `
+    <span class="mini-bar-label" title="${e.nombre}">${short}</span>
+    <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${e.progreso}%"></div></div>
+    <span class="mini-bar-val">${e.progreso}%</span>`;
+  barsWrap.appendChild(div);
+});
+
+// Temas por repasar (nota < 7 o sin nota)
+const TEMAS_REPASAR = [
+  { nombre:'El acto administrativo', nota: 0,   epigrafe:'Ep. 1.6' },
+  { nombre:'Procedimiento administrativo', nota: 5.8, epigrafe:'Ep. 1.6' },
+  { nombre:'El Tribunal Constitucional', nota: 6.2, epigrafe:'Ep. 1.4' },
+];
+const repasarWrap = document.getElementById('temas-repasar');
+TEMAS_REPASAR.forEach(t => {
+  const dotClass = t.nota === 0 ? 'dot-no' : t.nota < 5 ? 'dot-mid' : 'dot-mid';
+  const notaStr  = t.nota === 0 ? '—' : t.nota.toFixed(1);
+  const notaColor = t.nota === 0 ? '#8a9faa' : t.nota < 5 ? 'var(--color-error)' : 'var(--color-secondary)';
+  const div = document.createElement('a');
+  div.className = 'tema-row';
+  div.href = 'epigrafe.html';
+  div.innerHTML = `
+    <div class="tema-dot ${dotClass}"></div>
+    <div>
+      <div class="tema-row-name">${t.nombre}</div>
+      <div style="font-size:0.65rem;font-family:var(--font-titles);color:var(--color-main);opacity:0.6">${t.epigrafe}</div>
+    </div>
+    <span class="tema-row-nota" style="color:${notaColor}">${notaStr}</span>`;
+  repasarWrap.appendChild(div);
+});
+</script>
+</body>
+</html>

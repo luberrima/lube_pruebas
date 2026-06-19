@@ -1,0 +1,221 @@
+/* ════════════════════════════════════════
+   SIDEBAR.CSS
+   Dependencias:
+   - root.css (variables)
+   - Google Fonts: IBM Plex Mono, Unbounded
+   - Material Symbols Rounded
+════════════════════════════════════════ */
+
+/* ── Variables locales ── */
+:root {
+  --sidebar-w: 60px;
+  --sidebar-expanded: 200px;
+  --sidebar-gap: 84px; /* margen izq del main: sidebar + 24px */
+}
+
+/* ══════════════════════════════
+   SIDEBAR BASE (desktop)
+══════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 12px;
+  bottom: 12px;
+  left: 12px;
+  width: var(--sidebar-w);
+  background: var(--color-white);
+  border-radius: 20px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  z-index: 100;
+  transition: width 0.18s ease;
+  overflow: hidden;
+}
+
+/* Expand on hover */
+.sidebar:hover {
+  width: var(--sidebar-expanded);
+}
+
+/* Logo */
+.sidebar-logo {
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 28px;
+  width: var(--sidebar-w);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Nav */
+.sidebar nav {
+  width: 100%;
+  flex: 1;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li a {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 19px;
+  gap: 12px;
+  color: var(--color-main-dark);
+  text-decoration: none;
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+
+.sidebar li a:hover,
+.sidebar li.active a {
+  background: #e8f4f5;
+}
+
+.sidebar li.active a {
+  font-weight: 600;
+}
+
+/* Iconos */
+.sidebar .material-symbols-rounded {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+/* Textos (ocultos hasta hover) */
+.sidebar .nav-text {
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  pointer-events: none;
+}
+
+.sidebar:hover .nav-text {
+  opacity: 1;
+}
+
+/* Zona inferior (perfil + logout) */
+.sidebar-bottom {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* ══════════════════════════════
+   MAIN — margen izquierdo
+   Añadir a cada página:
+   main { margin-left: var(--sidebar-gap); }
+══════════════════════════════ */
+
+
+/* ══════════════════════════════
+   MÓVIL (< 768px)
+   El sidebar se convierte en
+   una bottom bar flotante
+══════════════════════════════ */
+@media (max-width: 767px) {
+
+  .sidebar {
+    /* Posición: barra inferior */
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    /* Tamaño */
+    width: auto !important; /* anula el expand de hover */
+    height: 62px;
+    /* Layout horizontal */
+    flex-direction: row;
+    border-radius: 20px;
+    padding: 0 4px;
+    justify-content: center;
+  }
+
+  /* Desactivar hover expand en móvil */
+  .sidebar:hover {
+    width: auto !important;
+  }
+
+  .sidebar-logo {
+    display: none;
+  }
+
+  .sidebar nav {
+    flex: 1;
+  }
+
+  .sidebar ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 62px;
+  }
+
+  .sidebar li {
+    display: flex;
+  }
+
+  .sidebar li a {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 12px;
+  }
+
+  /* Ocultar textos en móvil */
+  .sidebar .nav-text {
+    display: none !important;
+  }
+
+  /* Ocultar zona inferior en móvil */
+  .sidebar-bottom {
+    display: none;
+  }
+
+  /* Iconos ligeramente más grandes para dedos */
+  .sidebar .material-symbols-rounded {
+    font-size: 26px;
+  }
+
+  /* Feedback táctil */
+  .sidebar li a:active {
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(0.92);
+  }
+
+  /* El main necesita margen inferior para no quedar
+     tapado por la bottom bar */
+  main {
+    margin-left: 0 !important;
+    margin-bottom: 86px;
+  }
+}
+
+
+/* 
+Cómo usarlo en cada página:
+html<head>
+  <link rel="stylesheet" href="root.css"/>
+  <link rel="stylesheet" href="sidebar.css"/>
+</head>
+<body>
+  <!-- Copiar el snippet de sidebar.html aquí -->
+  <!-- Añadir clase "active" al <li> de la página actual -->
+
+  <main>
+    <!-- contenido -->
+  </main>
+</body>
+css/* En el CSS de cada página: */
+/*main {
+  margin-left: var(--sidebar-gap);
+  /* resto de estilos... */
+/* } */

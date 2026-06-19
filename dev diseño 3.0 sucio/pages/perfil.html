@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Mi Perfil</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0");
+
+:root {
+  --color-main: #008e97;
+  --color-main-dark: #085d7c;
+  --color-main-light: #84e5ea;
+  --color-secondary: #fc4c02;
+  --color-secondary-dark: #700600;
+  --color-success: #1d9b3a;
+  --color-error: #c11717;
+  --color-white: #ffffff;
+  --color-black: #002634;
+  --color-bg: #fefcfb;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-titles: "IBM Plex Mono", monospace;
+  --font-h1: "Unbounded", sans-serif;
+  --shadow: 1px 1px 20px 0 rgba(0,0,0,0.10);
+  --br-big: 20px 0 20px 0;
+  --br-small: 10px 0 10px 0;
+  --sidebar-w: 60px;
+  --sidebar-gap: 84px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #cde8ed 0%, #ddeef5 40%, #f9ddd4 100%);
+  font-family: var(--font-text);
+  color: var(--color-black);
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════
+   SIDEBAR
+══════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 12px; bottom: 12px; left: 12px;
+  width: var(--sidebar-w);
+  background: var(--color-white);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  z-index: 100;
+  transition: width 0.18s ease;
+  overflow: hidden;
+}
+.sidebar:hover { width: 200px; }
+.sidebar-logo {
+  font-family: var(--font-titles);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 28px;
+  width: var(--sidebar-w);
+  text-align: center;
+  flex-shrink: 0;
+}
+.sidebar nav { width: 100%; flex: 1; }
+.sidebar ul { list-style: none; }
+.sidebar li a {
+  display: flex; align-items: center;
+  height: 48px; padding: 0 19px; gap: 12px;
+  color: var(--color-main-dark);
+  text-decoration: none;
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+.sidebar li a:hover,
+.sidebar li.active a { background: #e8f4f5; }
+.sidebar li.active a { font-weight: 600; }
+.material-symbols-rounded { font-size: 22px; flex-shrink: 0; }
+.nav-text {
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.sidebar:hover .nav-text { opacity: 1; }
+.sidebar-bottom { margin-top: auto; width: 100%; }
+
+/* ══════════════════════════════
+   MAIN
+══════════════════════════════ */
+main {
+  margin-left: var(--sidebar-gap);
+  flex: 1;
+  padding: 36px 36px 60px 20px;
+  max-width: calc(860px + var(--sidebar-gap) + 36px);
+  min-width: 0;
+}
+
+.page-label {
+  font-family: var(--font-titles);
+  font-size: 0.9rem;
+  color: var(--color-main);
+  margin-bottom: 4px;
+}
+.page-title {
+  font-family: var(--font-h1);
+  font-size: 1.8rem;
+  color: var(--color-main-dark);
+  margin-bottom: 28px;
+  line-height: 1.2;
+}
+
+/* ══════════════════════════════
+   LAYOUT GRID
+══════════════════════════════ */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 20px;
+  align-items: start;
+}
+.col-left  { display: flex; flex-direction: column; gap: 20px; }
+.col-right { display: flex; flex-direction: column; gap: 20px; }
+
+/* ══════════════════════════════
+   CARDS
+══════════════════════════════ */
+.card {
+  background: var(--color-white);
+  border-radius: var(--br-big);
+  box-shadow: var(--shadow);
+  padding: 24px 26px;
+}
+.card-title {
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ══════════════════════════════
+   AVATAR + IDENTIDAD
+══════════════════════════════ */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+.avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--color-main-dark);
+  color: var(--color-white);
+  font-family: var(--font-h1);
+  font-size: 1.8rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.avatar-edit {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  border: 2px solid var(--color-white);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.avatar-edit:hover { background: var(--color-secondary-dark); }
+.avatar-edit .material-symbols-rounded { font-size: 14px; color: var(--color-white); }
+
+.avatar-name {
+  font-family: var(--font-h1);
+  font-size: 1.1rem;
+  color: var(--color-main-dark);
+  line-height: 1.2;
+}
+.avatar-email {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+}
+
+/* Badge de plan */
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 14px;
+  border-radius: var(--br-small);
+  font-family: var(--font-titles);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.plan-badge.premium { background: #fff3e0; color: #a06000; }
+.plan-badge.medio   { background: #e0ecf8; color: var(--color-main-dark); }
+.plan-badge.basico  { background: #e8f4f5; color: var(--color-main); }
+.plan-badge .material-symbols-rounded { font-size: 15px; }
+
+/* Divider */
+.divider {
+  border: none;
+  border-top: 1px solid #e8f0f2;
+  margin: 4px 0;
+}
+
+/* ── Stats rápidas ── */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  text-align: center;
+  padding: 4px 0;
+}
+.qs-item + .qs-item { border-left: 1px solid #e8f0f2; }
+.qs-num {
+  font-family: var(--font-h1);
+  font-size: 1.4rem;
+  color: var(--color-main-dark);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.qs-label {
+  font-family: var(--font-text);
+  font-size: 0.7rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+  line-height: 1.3;
+}
+
+/* Racha */
+.racha-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 0 4px;
+  font-family: var(--font-titles);
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+.racha-wrap .material-symbols-rounded {
+  font-size: 20px;
+  font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 24;
+}
+
+/* ══════════════════════════════
+   FORMULARIO
+══════════════════════════════ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+.form-group:last-of-type { margin-bottom: 0; }
+
+.form-label {
+  font-family: var(--font-titles);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+  opacity: 0.7;
+}
+.form-input {
+  border: 1px solid #c8dde2;
+  border-radius: var(--br-small);
+  background: var(--color-bg);
+  color: var(--color-black);
+  font-family: var(--font-text);
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-main);
+  box-shadow: 0 0 0 3px rgba(0,142,151,0.12);
+}
+.form-input:disabled {
+  background: #f0f6f8;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ══════════════════════════════
+   PLAN
+══════════════════════════════ */
+.plan-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.plan-details {}
+.plan-name {
+  font-family: var(--font-titles);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-main-dark);
+  margin-bottom: 3px;
+}
+.plan-renewal {
+  font-family: var(--font-text);
+  font-size: 0.78rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+}
+
+.plan-features {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.plan-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  color: var(--color-black);
+}
+.plan-feature .material-symbols-rounded {
+  font-size: 18px;
+  color: var(--color-success);
+  font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 24;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════
+   OPOSICIÓN
+══════════════════════════════ */
+.oposicion-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e8f0f2;
+}
+.oposicion-item:last-child { border-bottom: none; }
+.ops-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px 0 10px 0;
+  background: #e0f0f2;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ops-icon .material-symbols-rounded { font-size: 20px; color: var(--color-main-dark); }
+.ops-info { flex: 1; min-width: 0; }
+.ops-name {
+  font-family: var(--font-titles);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ops-prog {
+  font-family: var(--font-text);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+  margin-top: 2px;
+}
+.prog-track {
+  height: 5px;
+  background: #d9eef0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+.prog-fill {
+  height: 100%;
+  background: var(--color-main);
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════
+   PREFERENCIAS — TOGGLES
+══════════════════════════════ */
+.pref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid #e8f0f2;
+  gap: 12px;
+}
+.pref-row:last-child { border-bottom: none; }
+.pref-info {}
+.pref-label {
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+  margin-bottom: 2px;
+}
+.pref-desc {
+  font-family: var(--font-text);
+  font-size: 0.72rem;
+  color: var(--color-main-dark);
+  opacity: 0.55;
+}
+.toggle-switch {
+  position: relative;
+  width: 40px; height: 22px;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #c8dde2;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  left: 3px; top: 3px;
+  background: var(--color-white);
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--color-main); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+/* ══════════════════════════════
+   BOTONES
+══════════════════════════════ */
+.btn {
+  padding: 10px 22px;
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--br-small);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn .material-symbols-rounded { font-size: 17px; }
+.btn-primary { background: var(--color-main-dark); color: var(--color-white); }
+.btn-primary:hover { background: var(--color-main); }
+.btn-accent  { background: var(--color-secondary); color: var(--color-white); }
+.btn-accent:hover  { opacity: 0.88; }
+.btn-ghost {
+  background: transparent;
+  color: var(--color-main-dark);
+  border: 1px solid var(--color-main-dark);
+}
+.btn-ghost:hover { background: #e8f4f5; }
+.btn-danger {
+  background: transparent;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
+.btn-danger:hover { background: #fdf0f0; }
+.btn-full { width: 100%; justify-content: center; }
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e8f0f2;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════
+   SEGURIDAD
+══════════════════════════════ */
+.security-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e8f0f2;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.security-row:last-child { border-bottom: none; }
+.sec-label {
+  font-family: var(--font-titles);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+}
+.sec-val {
+  font-family: var(--font-text);
+  font-size: 0.78rem;
+  color: var(--color-main-dark);
+  opacity: 0.5;
+}
+
+/* ══════════════════════════════
+   CERRAR SESIÓN
+══════════════════════════════ */
+.logout-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.logout-text {
+  font-family: var(--font-text);
+  font-size: 0.82rem;
+  color: var(--color-main-dark);
+  opacity: 0.6;
+  line-height: 1.4;
+}
+
+/* ══════════════════════════════
+   MÓVIL (< 768px)
+══════════════════════════════ */
+@media (max-width: 767px) {
+  .sidebar {
+    top: auto; left: 12px; right: 12px; bottom: 12px;
+    width: auto !important; height: 62px;
+    flex-direction: row; border-radius: 20px; padding: 0 4px;
+  }
+  .sidebar-logo { display: none; }
+  .sidebar nav { flex: 1; }
+  .sidebar ul { display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: 62px; }
+  .sidebar li { display: flex; }
+  .sidebar li a { width: 50px; height: 50px; padding: 0; justify-content: center; border-radius: 12px; }
+  .nav-text { display: none !important; }
+  .sidebar-bottom { display: none; }
+
+  main {
+    margin-left: 0;
+    margin-bottom: 86px;
+    padding: 20px 14px 40px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .page-title { font-size: 1.35rem; margin-bottom: 20px; }
+
+  /* Grid → columna única */
+  .profile-grid { grid-template-columns: 1fr; }
+
+  /* Form rows → columna */
+  .form-row { grid-template-columns: 1fr; }
+
+  /* Cards */
+  .card { padding: 18px 14px; }
+
+  /* Botones footer */
+  .card-footer { justify-content: stretch; flex-direction: column-reverse; }
+  .card-footer .btn { width: 100%; justify-content: center; }
+
+  .btn-full { font-size: 0.85rem; }
+
+  .logout-section { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">LOGO</div>
+  <nav>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-symbols-rounded">dashboard</span><span class="nav-text">Dashboard</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">view_kanban</span><span class="nav-text">Esquemas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">menu_book</span><span class="nav-text">Oposiciones</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">finance</span><span class="nav-text">Estadísticas</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">school</span><span class="nav-text">Mi grupo</span></a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <ul>
+      <li class="active"><a href="#"><span class="material-symbols-rounded">account_circle</span><span class="nav-text">Mi perfil</span></a></li>
+      <li><a href="#"><span class="material-symbols-rounded">logout</span><span class="nav-text">Salir</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main>
+  <p class="page-label">Área personal</p>
+  <h1 class="page-title">Mi Perfil</h1>
+
+  <div class="profile-grid">
+
+    <!-- ── COLUMNA IZQUIERDA ── -->
+    <div class="col-left">
+
+      <!-- Identidad + stats -->
+      <div class="card">
+        <div class="avatar-section">
+          <div class="avatar">
+            AL
+            <div class="avatar-edit">
+              <span class="material-symbols-rounded">edit</span>
+            </div>
+          </div>
+          <div>
+            <div class="avatar-name">Ana López García</div>
+            <div class="avatar-email">ana.lopez@email.com</div>
+          </div>
+          <span class="plan-badge premium">
+            <span class="material-symbols-rounded">workspace_premium</span>
+            Plan Premium
+          </span>
+        </div>
+
+        <hr class="divider" style="margin: 18px 0 16px"/>
+
+        <div class="quick-stats">
+          <div class="qs-item">
+            <div class="qs-num">47</div>
+            <div class="qs-label">Tests<br>realizados</div>
+          </div>
+          <div class="qs-item">
+            <div class="qs-num">8,2</div>
+            <div class="qs-label">Nota<br>media</div>
+          </div>
+          <div class="qs-item">
+            <div class="qs-num">12</div>
+            <div class="qs-label">Días de<br>racha</div>
+          </div>
+        </div>
+
+        <div class="racha-wrap">
+          <span class="material-symbols-rounded">local_fire_department</span>
+          ¡12 días estudiando seguidos!
+        </div>
+      </div>
+
+      <!-- Mi oposición -->
+      <div class="card">
+        <div class="card-title">Mi Oposición</div>
+        <div class="oposicion-item">
+          <div class="ops-icon"><span class="material-symbols-rounded">menu_book</span></div>
+          <div class="ops-info">
+            <div class="ops-name">Administrativo del Estado</div>
+            <div class="ops-prog">62% completado · 24 temas</div>
+            <div class="prog-track"><div class="prog-fill" style="width:62%"></div></div>
+          </div>
+        </div>
+        <div class="oposicion-item">
+          <div class="ops-icon"><span class="material-symbols-rounded">menu_book</span></div>
+          <div class="ops-info">
+            <div class="ops-name">Auxiliar Administrativo</div>
+            <div class="ops-prog">28% completado · 18 temas</div>
+            <div class="prog-track"><div class="prog-fill" style="width:28%"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <button class="btn btn-ghost btn-full">
+            <span class="material-symbols-rounded">add</span>
+            Añadir oposición
+          </button>
+        </div>
+      </div>
+
+      <!-- Preferencias -->
+      <div class="card">
+        <div class="card-title">Preferencias</div>
+        <div class="pref-row">
+          <div class="pref-info">
+            <div class="pref-label">Notificaciones</div>
+            <div class="pref-desc">Recibir avisos de nuevas convocatorias</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" checked/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="pref-row">
+          <div class="pref-info">
+            <div class="pref-label">Recordatorio diario</div>
+            <div class="pref-desc">Un recordatorio para estudiar cada día</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" checked/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="pref-row">
+          <div class="pref-info">
+            <div class="pref-label">Mostrar epígrafes</div>
+            <div class="pref-desc">Mostrar el epígrafe en cada pregunta del test</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── COLUMNA DERECHA ── -->
+    <div class="col-right">
+
+      <!-- Datos personales -->
+      <div class="card">
+        <div class="card-title">Datos personales</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input class="form-input" type="text" value="Ana"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellidos</label>
+            <input class="form-input" type="text" value="López García"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input class="form-input" type="email" value="ana.lopez@email.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input class="form-input" type="tel" value="+34 612 345 678"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ciudad</label>
+          <input class="form-input" type="text" value="Madrid"/>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-ghost">Cancelar</button>
+          <button class="btn btn-primary">
+            <span class="material-symbols-rounded">save</span>
+            Guardar cambios
+          </button>
+        </div>
+      </div>
+
+      <!-- Plan activo -->
+      <div class="card">
+        <div class="card-title">Mi Plan</div>
+        <div class="plan-info">
+          <div class="plan-details">
+            <div class="plan-name">Plan Premium</div>
+            <div class="plan-renewal">Renovación el 15 de enero de 2026</div>
+          </div>
+          <span class="plan-badge premium">
+            <span class="material-symbols-rounded">workspace_premium</span>
+            Activo
+          </span>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feature">
+            <span class="material-symbols-rounded">check_circle</span>
+            Acceso ilimitado a todos los tests
+          </div>
+          <div class="plan-feature">
+            <span class="material-symbols-rounded">check_circle</span>
+            Explicaciones en vídeo por tema
+          </div>
+          <div class="plan-feature">
+            <span class="material-symbols-rounded">check_circle</span>
+            Supuestos prácticos completos
+          </div>
+          <div class="plan-feature">
+            <span class="material-symbols-rounded">check_circle</span>
+            Progreso guardado permanentemente
+          </div>
+          <div class="plan-feature">
+            <span class="material-symbols-rounded">check_circle</span>
+            Atención personalizada del preparador
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-full">Ver otros planes</button>
+      </div>
+
+      <!-- Seguridad -->
+      <div class="card">
+        <div class="card-title">Seguridad</div>
+        <div class="security-row">
+          <div>
+            <div class="sec-label">Contraseña</div>
+            <div class="sec-val">Última actualización hace 3 meses</div>
+          </div>
+          <button class="btn btn-ghost">Cambiar</button>
+        </div>
+        <div class="security-row">
+          <div>
+            <div class="sec-label">Correo electrónico</div>
+            <div class="sec-val">ana.lopez@email.com</div>
+          </div>
+          <button class="btn btn-ghost">Cambiar</button>
+        </div>
+      </div>
+
+      <!-- Favoritos -->
+      <div class="card" style="cursor:pointer" onclick="window.location.href='favoritos.html'">
+        <div class="logout-section">
+          <div>
+            <div class="sec-label" style="margin-bottom:4px">Mis preguntas favoritas</div>
+            <div class="logout-text">Accede a todas las preguntas que has marcado como favoritas.</div>
+          </div>
+          <button class="btn btn-primary">
+            <span class="material-symbols-rounded">favorite</span>
+            Ver favoritos
+          </button>
+        </div>
+      </div>
+
+      <!-- Cerrar sesión -->
+      <div class="card">
+        <div class="logout-section">
+          <div class="logout-text">
+            Tu progreso está siempre a salvo.<br>Puedes cerrar sesión cuando quieras.
+          </div>
+          <button class="btn btn-danger" onclick="window.location.href='nuevo-test.html'">
+            <span class="material-symbols-rounded">logout</span>
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

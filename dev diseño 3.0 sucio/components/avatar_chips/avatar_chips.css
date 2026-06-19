@@ -1,0 +1,30 @@
+.avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--color-main-dark);
+  color: var(--color-white);
+  font-family: var(--font-h1);
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.avatar.sm { width: 32px; height: 32px; font-size: 0.75rem; }
+.avatar.lg { width: 60px; height: 60px; font-size: 1.4rem; }
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 6px 14px 6px 6px;
+  background: var(--color-white);
+  border-radius: 99px;
+  box-shadow: var(--shadow);
+}
+.chip-name {
+  font-family: var(--font-titles);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-main-dark);
+  line-height: 1.2;
+}
+.chip-plan { font-size: 0.68rem; color: var(--color-main); }

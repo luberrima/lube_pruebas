@@ -1,0 +1,23 @@
+.cronometro {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-white);
+  border-radius: var(--br-small);
+  box-shadow: var(--shadow);
+  padding: 8px 16px;
+}
+.cronometro .material-symbols-rounded { font-size: 20px; color: var(--color-main); }
+.crono-time {
+  font-family: var(--font-h1);
+  font-size: 1.1rem;
+  color: var(--color-main-dark);
+  letter-spacing: 0.05em;
+}
+.cronometro.warning .material-symbols-rounded { color: var(--color-secondary); }
+.cronometro.warning .crono-time { color: var(--color-secondary); }
+
+@media (max-width: 767px) {
+  /* Cronómetro ligeramente más grande */
+  .crono-time { font-size: 1.25rem; }
+}
